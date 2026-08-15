@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- pls dont remove the viewport tag or mobile looks like garbage -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMI SHAH // DOCTERGREEN.EXE</title>
+    
+    <!-- ========================================================================== -->
+    <!-- EXTERNAL FONTS & ICONS (font awesome and google fonts)                     -->
+    <!-- ========================================================================== -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 
+        ========================================================================== 
+          ██████╗  ██████╗  ██████╗████████╗███████╗██████╗  ██████╗ ██████╗ ███████╗███████╗███╗   ██╗
+          ██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝ ██╔══██╗██╔════╝██╔════╝████╗  ██║
+          ██║  ██║██║   ██║██║        ██║   █████╗  ██████╔╝██║  ███╗██████╔╝█████╗  █████╗  ██╔██╗ ██║
+          ██║  ██║██║   ██║██║        ██║   ██╔══╝  ██╔══██╗██║   ██║██╔══██╗██╔══╝  ██╔══╝  ██║╚██╗██║
+          ██████╔╝╚██████╔╝╚██████╗   ██║   ███████╗██║  ██║╚██████╔╝██║  ██║███████╗███████╗██║ ╚████║
+          ╚═════╝  ╚═════╝  ╚═════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝
+        ========================================================================== 
+        */
+
+        /* ========================================================================== */
+        /* ROOT CSS VARIABLES (THEME ENGINE STUFF)                                    */
+        /* ========================================================================== */
+        :root {
+            /* magic colors, dont change these directly, the JS theme switcher handles it */
+            --neon: #00ff41;
+            --neon-dim: #00cc33;
+            --neon-dark: #008f11;
+            --neon-glow: rgba(0, 255, 65, 0.3);
+            
+            --secondary: #007a33; 
+            --secondary-dim: #005c26;
+            
+            --theme-text: #d4ffeb; 
+            
+            --black: #000000;
+            --black-light: #050505;
+            --black-card: #0a0a0a;
+            
+            --gray: #888888;
+        }
+
+        /* reset everything cause browsers are dumb */
+        * {
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+            box-sizing: border-box;
+        }
+
+        /* accessibility stuff - turns off crazy animations if user has it disabled in OS */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .breach-shake, .spider-glitch, .electric-flash, .electric-ring, 
+            .electric-bolt, .hologram-ring, .character-image, .scan-line, 
+            .global-scan-line, .hex-grid {
+                animation-name: none !important;
+                transform: none !important;
+                filter: none !important;
+                text-shadow: none !important;
+            }
+        }
+
+        html {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background-color: var(--black);
+        }
+
+        body {
+            background-color: transparent;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon);
+            cursor: crosshair; /* looks super cool like a terminal */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .no-scroll {
+            overflow-y: hidden !important;
+            overflow-x: hidden !important;
+        }
+
+        body.boot-active {
+            overflow-y: hidden;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        /* crazy shake anim for the hacking part */
+        .breach-shake {
+            animation-name: intenseShake;
+            animation-duration: 0.3s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes intenseShake {
+            0% { transform: translate(0, 0) rotate(0); }
+            10% { transform: translate(-3px, -3px) rotate(-1deg); }
+            20% { transform: translate(3px, -3px) rotate(1deg); }
+            30% { transform: translate(-3px, 3px) rotate(0deg); }
+            40% { transform: translate(3px, 3px) rotate(1deg); }
+            50% { transform: translate(-3px, -3px) rotate(-1deg); }
+            60% { transform: translate(3px, -3px) rotate(0deg); }
+            70% { transform: translate(-3px, 3px) rotate(-1deg); }
+            80% { transform: translate(3px, 3px) rotate(1deg); }
+            90% { transform: translate(-3px, -3px) rotate(0deg); }
+            100% { transform: translate(0, 0) rotate(0); }
+        }
+
+        /* my custom text glitch effect, took ages to get the timings right */
+        .spider-glitch {
+            position: relative;
+            animation-name: spideyGlitch;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes spideyGlitch {
+            0%, 96% { text-shadow: none; transform: none; }
+            97% { text-shadow: 2px 0 var(--secondary), -2px 0 var(--neon); transform: skewX(2deg); }
+            98% { text-shadow: -2px 0 var(--neon), 2px 0 var(--secondary); transform: skewX(-2deg); }
+            99% { text-shadow: 2px 0 var(--theme-text), -2px 0 var(--neon); transform: skewX(1deg); }
+            100% { text-shadow: none; transform: none; }
+        }
+
+        /* Background overlays */
+        #matrix-canvas {
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            z-index: -4; 
+            opacity: 0.15; 
+            pointer-events: none; /* VERY IMPORTANT or you cant click anything */
+        }
+
+        .hex-grid {
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            z-index: -3; 
+            opacity: 0.08; 
+            transition-property: background-image;
+            transition-duration: 0.5s;
+            transition-timing-function: ease;
+            animation: hexPulse 8s ease-in-out infinite; 
+            pointer-events: none;
+        }
+
+        @keyframes hexPulse {
+            0%, 100% { opacity: 0.04; }
+            50% { opacity: 0.12; }
+        }
+
+        /* corner brackets for the hud */
+        .corner-bracket {
+            position: fixed; 
+            width: 40px; height: 40px;
+            border: 3px solid var(--neon); 
+            z-index: 9997; 
+            pointer-events: none; 
+            transition: border-color 0.5s ease;
+        }
+
+        .corner-bracket.tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+        .corner-bracket.tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+        .corner-bracket.bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+        .corner-bracket.br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+        /* crt tv effect lines */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+            z-index: 9996; pointer-events: none;
+        }
+
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.9) 100%);
+            z-index: -2; pointer-events: none;
+        }
+
+        /* big slow scan line that goes down the whole page */
+        .global-scan-line {
+            position: fixed; top: 0; left: 0; width: 100%; height: 15px;
+            background-image: linear-gradient(to bottom, transparent, var(--neon), transparent);
+            opacity: 0.3; z-index: 9995; pointer-events: none;
+            animation: globalScan 5s linear infinite;
+        }
+
+        @keyframes globalScan {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* cyberpunk extra hud elements */
+        .side-ruler {
+            position: fixed; left: 15px; top: 50%; transform: translateY(-50%);
+            width: 10px; height: 60vh; 
+            border-right: 1px solid var(--neon-dim);
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, var(--neon-dim) 19px, var(--neon-dim) 20px);
+            z-index: 9994; opacity: 0.2; pointer-events: none;
+        }
+
+        .data-stream-vertical {
+            position: fixed; right: 15px; top: 50%; transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--neon-dim);
+            line-height: 1.2; opacity: 0.15; z-index: 9994; pointer-events: none;
+            writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 4px;
+        }
+
+        .crosshair-marker {
+            position: fixed; width: 20px; height: 20px; pointer-events: none; z-index: 9994; opacity: 0.2;
+        }
+        .crosshair-marker::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background-color: var(--neon); }
+        .crosshair-marker::after { content: ''; position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background-color: var(--neon); }
+
+        .hud-element {
+            position: fixed; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+            color: var(--neon-dim); letter-spacing: 2px; z-index: 9995; pointer-events: none; opacity: 0.5;
+        }
+
+        .top-center { top: 15px; left: 50%; transform: translateX(-50%); }
+        .bottom-left { bottom: 15px; left: 80px; }
+        .bottom-right { bottom: 15px; right: 80px; }
+
+        /* THEME SELECTOR MENU */
+        .theme-trigger {
+            position: fixed; bottom: 35px; right: 50px; width: 40px; height: 40px;
+            background-color: transparent; border: 1px solid var(--neon-dim);
+            z-index: 10000; opacity: 0.3; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; cursor: pointer;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        @media (hover: hover) {
+            .theme-trigger:hover { 
+                opacity: 1; background-color: var(--neon); color: var(--black); box-shadow: 0 0 30px var(--neon); 
+            }
+        }
+
+        .mobile-theme-toggle {
+            display: none; color: var(--neon); font-size: 1.5rem; cursor: pointer; transition: transform 0.3s;
+        }
+
+        @media (hover: hover) {
+            .mobile-theme-toggle:hover { transform: rotate(90deg); }
+        }
+
+        /* the expanding box animation for the theme panel */
+        .theme-panel-wrapper {
+            position: fixed; bottom: 85px; right: 50px; width: 0px; height: 4px; 
+            background-color: rgba(0,0,0,0.98); border: 2px solid transparent;
+            z-index: 10001; box-shadow: 0 0 30px var(--neon-glow);
+            transition: width 0.3s cubic-bezier(0.86, 0, 0.07, 1), height 0.3s cubic-bezier(0.86, 0, 0.07, 1), border-color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .theme-panel-wrapper.step-1 { width: 250px; height: 4px; border-top-color: var(--neon); border-bottom-color: var(--neon); }
+        .theme-panel-wrapper.step-2 { width: 250px; height: 260px; border-color: var(--neon); }
+        .theme-panel-wrapper.step-closing-1 { width: 250px; height: 4px; border-color: var(--neon); }
+        .theme-panel-wrapper.step-closing-2 { width: 0px; height: 4px; border-color: var(--neon); }
+
+        .theme-panel-content { padding: 20px; opacity: 0; transition: opacity 0.2s ease; }
+        .theme-panel-content.show { opacity: 1; }
+
+        .theme-option {
+            padding: 10px 20px; margin: 5px 0; border: 1px solid var(--neon-dim);
+            background-color: transparent; color: var(--theme-text); cursor: pointer; 
+            font-family: 'JetBrains Mono', monospace; font-size: 12px;
+            display: flex; align-items: center; gap: 10px; text-transform: uppercase; 
+            letter-spacing: 2px; transition: all 0.2s; position: relative;
+        }
+
+        @media (hover: hover) {
+            .theme-option:hover { background-color: var(--neon); color: var(--black); }
+        }
+
+        .theme-dot { width: 12px; height: 12px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+        .type-label { display: inline-block; white-space: nowrap; overflow: hidden; border-right: 2px solid transparent; }
+        .type-label.typing { border-color: var(--neon); }
+
+        /* BOOT SEQUENCE CSS */
+        .boot-sequence {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000000; z-index: 9999; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 50px; overflow: hidden;
+        }
+
+        .boot-sequence.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+
+        .surveillance-header {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            text-align: center; width: 90%; max-width: 1000px;
+        }
+
+        .surveillance-title {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 4vw, 2rem); 
+            letter-spacing: 6px; color: var(--neon); text-shadow: 0 0 20px var(--neon); 
+            animation: pulse 2s infinite; transition: all 0.5s ease; white-space: normal; 
+            text-align: center; word-wrap: break-word; line-height: 1.4;
+        }
+
+        .surveillance-sub { font-size: clamp(0.6rem, 1.5vw, 0.8rem); color: var(--neon-dim); margin-top: 8px; letter-spacing: 4px; text-align: center; }
+
+        .user-info-display {
+            position: absolute; top: 100px; left: 40px; font-size: 11px; color: var(--neon-dim);
+            line-height: 1.8; opacity: 0; animation: fadeIn 1s 1s forwards; max-width: 400px;
+        }
+
+        .user-info-line { margin: 3px 0; display: flex; align-items: center; gap: 10px; }
+        .user-info-label { color: var(--secondary); min-width: 80px; flex-shrink: 0; }
+
+        /* the cool rotating target thing */
+        .target-lock { position: relative; width: 200px; height: 200px; margin: 40px 0; }
+        .target-box { position: absolute; inset: 0; border: 2px solid var(--neon); animation: targetPulse 2s infinite; box-shadow: 0 0 30px var(--neon-glow); }
+        .target-inner { position: absolute; inset: 20px; border: 2px solid var(--neon); animation: rotate 8s linear infinite; opacity: 0.5; }
+        .target-core { position: absolute; inset: 40px; border: 2px solid var(--neon); animation: rotate 6s linear infinite reverse; }
+
+        @keyframes targetPulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .boot-content { font-size: 13px; max-width: 600px; text-align: center; margin-top: 20px; }
+        .boot-line { margin: 8px 0; opacity: 0; animation: fadeIn 0.5s forwards; text-shadow: 0 0 10px var(--neon); }
+        
+        /* super hacky delay setup but it works */
+        .boot-line:nth-child(1) { animation-delay: 0.2s; }
+        .boot-line:nth-child(2) { animation-delay: 0.4s; }
+        .boot-line:nth-child(3) { animation-delay: 0.6s; }
+        .boot-line:nth-child(4) { animation-delay: 0.8s; }
+        .boot-line:nth-child(5) { animation-delay: 1s; }
+        .boot-line:nth-child(6) { animation-delay: 1.2s; }
+        .boot-line:nth-child(7) { animation-delay: 1.4s; }
+        .boot-line:nth-child(8) { animation-delay: 1.6s; }
+        .boot-line:nth-child(9) { animation-delay: 1.8s; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .boot-warning { color: var(--neon); text-shadow: 0 0 15px var(--neon); }
+        .boot-success { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); }
+
+        .breach-area { margin-top: 50px; display: flex; flex-direction: column; align-items: center; gap: 20px; opacity: 0; pointer-events: none; animation: enableBreach 0.5s 2s forwards; }
+
+        @keyframes enableBreach { to { opacity: 1; pointer-events: all; } }
+
+        .access-granted {
+            padding: 20px 60px; border: 2px solid var(--neon); color: var(--neon); 
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 4px; 
+            background-color: transparent; cursor: pointer; text-transform: uppercase;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); 
+            transition: all 0.3s ease; position: relative; overflow: hidden; z-index: 1;
+        }
+
+        .access-granted::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background-color: var(--neon); transition: left 0.3s ease; z-index: -1; }
+
+        @media (hover: hover) {
+            .access-granted:hover::before { left: 0; }
+            .access-granted:hover { color: var(--black); box-shadow: 0 0 40px var(--neon); }
+        }
+
+        .skip-button {
+            padding: 10px 30px; border: 1px solid var(--gray); color: var(--gray); 
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 2px; 
+            background-color: transparent; cursor: pointer; text-transform: uppercase; transition: all 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .skip-button:hover { border-color: var(--theme-text); color: var(--theme-text); text-shadow: 0 0 10px var(--theme-text); }
+        }
+
+        /* HACKING SEQUENCE OVERLAY CSS */
+        .hacking-sequence {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
+            z-index: 9998; display: none; flex-direction: column; justify-content: center; 
+            align-items: center; padding: 50px; overflow: hidden;
+        }
+
+        .hacking-sequence.active { display: flex; }
+
+        .mini-terminal { 
+            position: absolute; top: 20px; left: 20px; width: 300px; height: 200px; 
+            font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--neon-dim); 
+            overflow: hidden; text-align: left; z-index: 2; 
+        }
+
+        .hacking-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; z-index: 0; }
+
+        .hacking-code-line { 
+            position: absolute; font-size: 10px; color: var(--neon); opacity: 0; 
+            animation: codeFall 3s linear infinite; white-space: nowrap; 
+        }
+
+        @keyframes codeFall { 
+            0% { opacity: 0; transform: translateY(-100%); } 
+            10%, 90% { opacity: 1; } 
+            100% { opacity: 0; transform: translateY(100vh); } 
+        }
+
+        .infrastructure { position: absolute; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
+        .infra-node { position: absolute; width: 8px; height: 8px; background-color: var(--neon); border-radius: 50%; opacity: 0; animation: nodeAppear 0.5s forwards; }
+        @keyframes nodeAppear { to { opacity: 1; box-shadow: 0 0 10px var(--neon); } }
+
+        .hacking-content { position: relative; z-index: 10; text-align: center; width: 100%; max-width: 600px; }
+        
+        .hacking-text { 
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1rem, 2.5vw, 1.8rem); color: var(--neon); 
+            letter-spacing: 3px; line-height: 1.4; min-height: 60px; text-shadow: 0 0 20px var(--neon); 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+        }
+
+        .hacking-subtext { font-size: 0.8rem; color: var(--secondary); font-family: 'JetBrains Mono', monospace; margin-bottom: 20px; height: 20px; }
+        
+        .hacking-progress-container { width: 100%; max-width: 500px; margin: 30px auto 0; position: relative; }
+        .hacking-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--neon-dim); margin-bottom: 10px; letter-spacing: 2px; }
+        .hacking-progress { height: 8px; background-color: rgba(255,255,255,0.1); position: relative; overflow: hidden; border: 1px solid var(--neon-dim); }
+        .hacking-progress-fill { 
+            height: 100%; background-image: linear-gradient(90deg, var(--neon-dark), var(--neon), var(--secondary)); 
+            width: 0%; transition: width 0.1s linear; box-shadow: 0 0 20px var(--neon), 0 0 40px var(--secondary); 
+            position: relative; overflow: hidden; 
+        }
+        .hacking-progress-fill::before { 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.5) 10px, rgba(0,0,0,0.5) 20px); 
+            animation: moveStripes 0.5s linear infinite; 
+        }
+        @keyframes moveStripes { 0% { transform: translateX(0); } 100% { transform: translateX(28px); } }
+
+        /* CYBER BURST FX */
+        .cyber-burst { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; z-index: 9996; display: none; pointer-events: none; }
+        .cyber-burst.active { display: block; }
+        
+        .electric-flash { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--neon); opacity: 0; mix-blend-mode: screen; 
+            animation: electricGlitch 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; 
+        }
+        .electric-ring { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border: 5px solid var(--neon); border-radius: 50%; 
+            box-shadow: 0 0 50px var(--neon), inset 0 0 50px var(--neon); animation: electricRing 0.6s ease-out forwards; 
+        }
+        .electric-bolt { 
+            position: absolute; top: 50%; left: 50%; width: 4px; height: 10px; background-color: #fff; box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon); 
+            transform-origin: top center; animation: shootBolt 0.5s ease-out forwards; 
+        }
+
+        @keyframes electricGlitch { 0%, 20%, 40%, 100% { opacity: 0; } 10% { opacity: 1; background-color: var(--theme-text); } 30% { opacity: 0.8; background-color: var(--neon); } 50% { opacity: 0.5; } }
+        @keyframes electricRing { 0% { width: 0; height: 0; opacity: 1; border-width: 50px; } 100% { width: 200vmax; height: 200vmax; opacity: 0; border-width: 2px; } }
+        @keyframes shootBolt { 0% { height: 0; opacity: 1; } 100% { height: 150vmax; opacity: 0; } }
+
+        /* BIG BREACH SUCCESS MSG */
+        .hacked-message {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; z-index: 9995;
+            display: none; flex-direction: column; justify-content: center; align-items: center; padding: 50px; transition: opacity 0.2s ease;
+        }
+        .hacked-message.active { display: flex; }
+
+        .hacked-title, .hacked-name, .hacked-subtitle, .hacked-realname { display: inline-block; white-space: nowrap; overflow: hidden; border-right: 0.15em solid transparent; }
+        .hacked-title { font-family: 'Orbitron', sans-serif; font-size: clamp(1.5rem, 4vw, 3rem); color: var(--neon); letter-spacing: 6px; text-shadow: 0 0 40px var(--neon); margin-bottom: 20px; }
+        .hacked-name { font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem); color: var(--neon); letter-spacing: 10px; text-shadow: 0 0 60px var(--neon), 0 0 100px var(--neon); }
+        .hacked-subtitle { font-size: 1.2rem; color: var(--secondary); margin-top: 30px; letter-spacing: 4px; }
+        .hacked-realname { font-size: 1rem; color: var(--theme-text); margin-top: 15px; letter-spacing: 3px; }
+        
+        .typing-border { animation: typingCursor 0.5s step-end infinite; }
+        @keyframes typingCursor { from, to { border-color: transparent; } 50% { border-color: var(--neon); } }
+
+        /* WIPE DOWN SCREEN FX */
+        .program-scanline {
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px; background-color: var(--theme-text);
+            box-shadow: 0 0 20px var(--theme-text), 0 0 50px var(--neon); z-index: 9999; display: none; pointer-events: none;
+        }
+        .program-scanline.active { display: block; animation: scanlineSweep 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        @keyframes scanlineSweep { 0% { top: 0; opacity: 1; } 100% { top: 100vh; opacity: 0; } }
+
+        .program-in { animation: programReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        @keyframes programReveal { 0% { opacity: 0; filter: blur(10px); transform: translateY(20px); } 100% { opacity: 1; filter: blur(0px); transform: translateY(0); } }
+
+        /* scroll glitch stuff - DO NOT TOUCH IT WILL BREAK EVERYTHING */
+        .scroll-glitch-target { transition: opacity 0.15s steps(3, end), transform 0.15s steps(3, end), filter 0.15s steps(3, end); }
+        .scroll-glitch-hide {
+            opacity: 0 !important; transform: translateY(-40px) scale(0.9) skewX(25deg) !important; 
+            filter: invert(0.8) drop-shadow(5px 5px 0 var(--neon)) !important; pointer-events: none !important;
+            transition: all 0.2s steps(3, end) !important;
+        }
+
+        /* aggressive snap in for HUD stuff */
+        @keyframes hudGlitchReveal {
+            0%   { opacity: 0; transform: scale(0.9) skewX(10deg); filter: invert(1); }
+            10%  { opacity: 1; transform: scale(1.05) skewX(-10deg); filter: invert(0) drop-shadow(0 0 10px var(--neon)); }
+            15%  { opacity: 0; transform: scale(0.95) skewX(5deg); }
+            25%  { opacity: 1; transform: scale(1) skewX(0); filter: drop-shadow(0 0 5px var(--secondary)); }
+            30%  { opacity: 0; }
+            40%  { opacity: 1; }
+            100% { opacity: 1; transform: scale(1) skewX(0); filter: none; }
+        }
+
+        /* sticky header */
+        .header-container {
+            position: fixed; top: 0; left: 0; right: 0; width: 100%; box-sizing: border-box; z-index: 100; 
+            background-image: linear-gradient(90deg, transparent 0px, var(--black) 150px, var(--black) calc(100% - 150px), transparent 100%);
+            opacity: 0; transform: translateY(-20px); transition: all 0.8s ease; display: none;
+        }
+        .header-container.visible { opacity: 1; transform: translateY(0); }
+        .header-container::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
+            background-image: linear-gradient(90deg, transparent 0px, var(--neon) 150px, var(--neon) calc(100% - 150px), transparent 100%);
+        }
+        .header-container::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+            box-shadow: inset 0 -20px 50px -20px var(--neon-dark), 0 5px 30px rgba(0, 0, 0, 0.9);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0px, black 150px, black calc(100% - 150px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0px, black 150px, black calc(100% - 150px), transparent 100%);
+        }
+
+        .header-inner { max-width: 1400px; margin: 0 auto; width: 100%; padding: 20px 40px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neon-dim); padding-bottom: 15px; margin-bottom: 15px; width: 100%; }
+        
+        .hud-logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 4px; }
+        .hud-logo span { display: block; font-size: 0.7rem; color: var(--secondary); letter-spacing: 6px; margin-top: 2px; }
+
+        .hud-status { display: flex; gap: 30px; font-size: 11px; transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease; overflow: hidden; max-height: 50px; }
+        .status-item { display: flex; align-items: center; gap: 8px; }
+        .status-indicator { 
+            width: 8px; height: 8px; background-color: var(--neon); 
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+            animation: pulse 2s infinite; box-shadow: 0 0 10px var(--neon); 
+        }
+
+        .header-bottom { display: flex; justify-content: space-between; align-items: center; width: 100%; transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease; overflow: hidden; max-height: 200px; }
+        .header-location { font-size: 11px; color: var(--neon-dim); display: flex; align-items: center; gap: 10px; }
+        .location-flag-img { width: 20px; height: 15px; object-fit: cover; border: 1px solid var(--neon-dim); }
+
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .social-links { display: flex; gap: 10px; }
+        
+        .social-link {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            background-color: rgba(0,0,0,0.8); border: 1px solid var(--neon-dim); color: var(--neon); font-size: 13px; 
+            transition: all 0.3s; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        @media (hover: hover) {
+            .social-link:hover { background-color: var(--neon); color: var(--black); box-shadow: 0 0 15px var(--neon); }
+        }
+
+        .download-btn {
+            padding: 8px 16px; background-color: rgba(0,0,0,0.8); border: 1px solid var(--neon); color: var(--neon); 
+            text-decoration: none; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; display: flex; 
+            align-items: center; gap: 6px; transition: all 0.3s; clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); white-space: nowrap; 
+        }
+        @media (hover: hover) {
+            .download-btn:hover { background-color: var(--neon); color: var(--black); box-shadow: 0 0 20px var(--neon); }
+        }
+
+        /* MAIN CONTENT LAYOUT */
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 40px 50px; position: relative; opacity: 0; display: none; }
+
+        /* HERO SECTION */
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 180px; min-height: 70vh; }
+        
+        .hero-text h1 { 
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; line-height: 1.1; 
+            margin-bottom: 20px; letter-spacing: 4px; opacity: 0; transform: translateX(-50px); transition: all 0.8s ease; 
+        }
+        .hero-text h1.visible { opacity: 1; transform: translateX(0); }
+
+        .hero-intro { font-size: 0.9rem; color: var(--secondary); margin-bottom: 10px; letter-spacing: 3px; text-transform: uppercase; opacity: 0; animation: fadeIn 1s 0.5s forwards; }
+        
+        .hero-mission { 
+            background-color: rgba(0,255,65,0.05); border: 1px solid var(--neon-dim); padding: 20px; margin-bottom: 30px; 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); 
+        }
+        .mission-title { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: var(--secondary); letter-spacing: 4px; margin-bottom: 10px; }
+        .mission-text { font-size: 0.95rem; color: var(--theme-text); line-height: 1.6; }
+
+        .hero-subtitle { 
+            font-size: 1rem; color: var(--neon-dim); margin-bottom: 30px; border-left: 3px solid var(--neon); 
+            padding-left: 20px; line-height: 1.8; opacity: 0; transform: translateX(-30px); transition: all 0.8s ease 0.2s; 
+        }
+        .hero-subtitle.visible { opacity: 1; transform: translateX(0); }
+
+        .terminal-window {
+            background-color: rgba(0,0,0,0.95); border: 1px solid var(--neon-dim); position: relative; margin-top: 30px; 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            opacity: 0; transform: translateY(30px); transition: all 0.8s ease 0.3s; min-height: 280px; 
+        }
+        .terminal-window.visible { opacity: 1; transform: translateY(0); }
+
+        .terminal-header { background-color: var(--black-card); padding: 10px 15px; border-bottom: 1px solid var(--neon-dim); display: flex; align-items: center; gap: 10px; }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        
+        .terminal-content { padding: 25px; font-size: 14px; line-height: 2; }
+        .terminal-line { margin-bottom: 5px; display: flex; align-items: flex-start; gap: 10px; }
+        .terminal-prompt { color: var(--secondary); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+        .terminal-command { color: var(--neon); }
+        
+        .terminal-output { color: var(--neon-dim); margin: 15px 0 15px 20px; padding-left: 20px; border-left: 2px solid var(--neon-dim); }
+        .terminal-output-item { margin: 8px 0; display: flex; align-items: center; gap: 10px; }
+        .terminal-output-item::before { content: '▸'; color: var(--neon); }
+        
+        .typing-cursor { display: inline-block; width: 10px; height: 18px; background-color: var(--neon); animation: blink 1s infinite; margin-left: 5px; }
+
+        /* Stats stuff under the hero text */
+        .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+        
+        .stat-box { 
+            background-color: rgba(0,0,0,0.9); border: 1px solid var(--neon-dim); padding: 20px; text-align: center; position: relative; 
+            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%); opacity: 0; cursor: pointer; transform: scale(0.95);
+        }
+        .stat-box.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        
+        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700; color: var(--secondary); }
+        .stat-label { font-size: 0.7rem; color: var(--neon-dim); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+
+        .click-flash-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--neon);
+            z-index: 100; pointer-events: none; animation: flashTwice 0.4s ease forwards;
+        }
+        @keyframes flashTwice { 0%, 50%, 100% { opacity: 0; } 25%, 75% { opacity: 0.8; } }
+
+        /* dope hover effect with corner brackets */
+        .hover-brackets {
+            position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px;
+            background-image: linear-gradient(var(--neon), var(--neon)), linear-gradient(var(--neon), var(--neon)),
+                              linear-gradient(var(--neon), var(--neon)), linear-gradient(var(--neon), var(--neon)),
+                              linear-gradient(var(--neon), var(--neon)), linear-gradient(var(--neon), var(--neon)),
+                              linear-gradient(var(--neon), var(--neon)), linear-gradient(var(--neon), var(--neon));
+            background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
+            background-size: 20px 3px, 3px 20px, 20px 3px, 3px 20px, 20px 3px, 3px 20px, 20px 3px, 3px 20px;
+            background-repeat: no-repeat; opacity: 0; transform: scale(0.9); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            pointer-events: none; z-index: 10;
+        }
+
+        @media (hover: hover) {
+            .stat-box:hover .hover-brackets, .timeline-content:hover .hover-brackets,
+            .command-card:hover .hover-brackets, .skill-node:hover .hover-brackets { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 10px var(--neon)); }
+
+            .stat-box:hover, .timeline-content:hover, .command-card:hover, .skill-node:hover {
+                transform: translateY(-5px) scale(1.02); box-shadow: inset 0 0 20px var(--neon-glow), 0 5px 30px var(--neon-glow); border-color: transparent;
+            }
+        }
+
+        /* 3D Hologram Image CSS */
+        .character-display { position: relative; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.95); }
+        .character-display.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards; }
+
+        .hologram-container { position: relative; width: 450px; height: 550px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 15px; }
+        .hologram-ring { position: absolute; border: 2px solid var(--neon); border-radius: 50%; opacity: 0.3; transition: all 0.5s ease; }
+        
+        /* spinning rings */
+        .hologram-ring:nth-child(1) { width: 500px; height: 500px; animation: rotate 10s linear infinite; }
+        .hologram-ring:nth-child(2) { width: 550px; height: 550px; animation: rotate 15s linear infinite reverse; }
+        .hologram-ring:nth-child(3) { width: 400px; height: 400px; animation: rotate 8s linear infinite; }
+
+        .character-image {
+            width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 30px var(--neon-glow));
+            position: relative; z-index: 10; animation: profileGlitch 4s infinite;
+        }
+
+        @keyframes profileGlitch {
+            0%, 96%, 100% { filter: drop-shadow(0 0 30px var(--neon-glow)); transform: translate(0) skewX(0); }
+            97% { filter: drop-shadow(2px 0 var(--secondary)); transform: translate(-2px, 1px) skewX(2deg); }
+            98% { filter: drop-shadow(-2px 0 var(--neon)); transform: translate(2px, -1px) skewX(-2deg); }
+            99% { filter: drop-shadow(2px 0 var(--theme-text)); transform: translate(-1px, 1px) skewX(1deg); }
+        }
+
+        .hologram-lines {
+            position: absolute; inset: 0; pointer-events: none; z-index: 11;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--neon-glow) 2px, var(--neon-glow) 4px);
+        }
+
+        .profile-crt-overlay {
+            position: absolute; inset: 0; pointer-events: none; z-index: 15;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) 1px, transparent 1px, transparent 2px);
+        }
+        
+        .scan-line {
+            position: absolute; top: 0; left: 0; right: 0; height: 2px; background-color: var(--neon); box-shadow: 0 0 20px var(--neon); 
+            animation: scanDown 3s ease-in-out infinite; z-index: 12;
+        }
+        @keyframes scanDown { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+        /* HEADERS FOR SECTIONS */
+        .section-header { 
+            margin: 100px 0 50px; padding: 20px 0; border-bottom: 1px solid var(--neon-dim); display: flex; align-items: center; 
+            gap: 20px; position: relative; opacity: 0; transform: scale(0.95);
+        }
+        .section-header.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        .section-header::before { content: ''; position: absolute; bottom: -1px; left: 0; width: 100px; height: 3px; background-color: var(--neon); box-shadow: 0 0 20px var(--neon); }
+
+        .section-icon { 
+            width: 50px; height: 50px; background-color: var(--black-card); border: 1px solid var(--neon); display: flex; 
+            align-items: center; justify-content: center; font-size: 1.3rem; color: var(--neon); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+        }
+        .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: var(--theme-text); }
+
+        /* THE EXPERIENCE TIMELINE */
+        .timeline-container { position: relative; padding: 40px 0; margin: 50px 0; }
+        .timeline-branch { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-image: linear-gradient(to bottom, var(--neon), var(--secondary), var(--neon)); transform: translateX(-50%); }
+        
+        .timeline-item { position: relative; margin: 40px 0; display: flex; align-items: center; opacity: 0; }
+        .timeline-item.visible { opacity: 1; animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+        .timeline-item:nth-child(even).visible { opacity: 1; animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+
+        .timeline-content { 
+            width: 45%; background-color: rgba(0,0,0,0.9); border: 1px solid var(--neon-dim); padding: 25px; 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); 
+            cursor: pointer; transition: all 0.3s ease; position: relative; 
+        }
+
+        .timeline-dot { 
+            position: absolute; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background-color: var(--neon); 
+            border: 4px solid var(--black); box-shadow: 0 0 20px var(--neon); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); z-index: 10; 
+        }
+
+        .timeline-date { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--secondary); margin-bottom: 10px; letter-spacing: 2px; }
+        .timeline-title { font-size: 1.2rem; color: var(--theme-text); margin-bottom: 5px; }
+        .timeline-company { font-size: 0.9rem; color: var(--neon-dim); margin-bottom: 15px; }
+        .timeline-desc { font-size: 0.85rem; color: var(--neon-dim); line-height: 1.6; }
+
+        /* CARDS (Grid lists for Edu / Info) */
+        .command-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 25px; }
+        
+        .command-card {
+            background-color: rgba(0,0,0,0.9); border: 1px solid var(--neon-dim); position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+            opacity: 0; transform: scale(0.95); transition: all 0.3s ease; overflow: hidden; cursor: pointer;
+        }
+        .command-card.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+
+        .card-header { 
+            background-image: linear-gradient(90deg, var(--neon-glow), transparent); padding: 15px 20px; 
+            border-bottom: 1px solid var(--neon-dim); display: flex; align-items: center; gap: 15px; 
+        }
+        .card-icon { 
+            width: 45px; height: 45px; min-width: 45px; background-color: var(--black-card); border: 1px solid var(--neon); 
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--neon); 
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+        }
+
+        .card-title-area { flex: 1; min-width: 0; }
+        .card-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--theme-text); letter-spacing: 2px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-subtitle { font-size: 0.75rem; color: var(--secondary); letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-date { font-size: 0.7rem; color: var(--neon-dim); padding: 5px 10px; background-color: rgba(0,0,0,0.5); border: 1px solid var(--neon-dim); white-space: nowrap; flex-shrink: 0; }
+
+        .card-content { padding: 20px; }
+        .card-content ul { list-style: none; }
+        .card-content li { position: relative; padding-left: 20px; margin-bottom: 10px; color: var(--neon-dim); font-size: 0.9rem; line-height: 1.6; }
+        .card-content li::before { content: '▸'; position: absolute; left: 0; color: var(--neon); }
+
+        /* SKILLS MATRIX AREA */
+        .skill-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        .skill-node {
+            background-color: rgba(0,0,0,0.9); border: 1px solid var(--neon-dim); padding: 20px; position: relative;
+            clip-path: polygon(5% 0, 100% 0, 100% 95%, 95% 100%, 0 100%, 0 5%); opacity: 0; transform: scale(0.95); transition: all 0.3s ease; cursor: pointer;
+        }
+        .skill-node.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        .skill-node::after { 
+            content: ''; position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background-color: var(--neon); 
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: pulse 2s infinite; z-index: 5; 
+        }
+
+        .skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .skill-name { font-weight: 600; color: var(--neon); font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+        .skill-level { font-size: 0.75rem; color: var(--secondary); letter-spacing: 1px; }
+        
+        .skill-bar { height: 6px; background-color: var(--black); border: 1px solid var(--neon-dim); position: relative; overflow: hidden; }
+        .skill-fill { height: 100%; background-image: linear-gradient(90deg, var(--neon-dark), var(--neon)); position: relative; width: 0; transition: width 1.5s ease; }
+        .skill-fill.active { width: var(--fill-width); }
+
+        /* CONTACT FORM CSS (Lookin clean) */
+        .contact-terminal {
+            background-color: rgba(0,0,0,0.95); border: 1px solid var(--neon-dim); padding: 50px; margin-top: 100px; position: relative; 
+            opacity: 0; transform: scale(0.95); transition: all 0.8s ease; box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+        .contact-terminal.visible { opacity: 1; transform: scale(1); animation: hudGlitchReveal 0.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
+
+        .contact-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin-bottom: 10px; letter-spacing: 4px; color: var(--theme-text); text-align: left; }
+        .contact-desc { color: var(--neon-dim); text-align: left; margin-bottom: 40px; font-size: 1rem; line-height: 1.6; }
+
+        .contact-form { display: flex; flex-direction: column; gap: 25px; text-align: left; position: relative; z-index: 2; width: 100%; }
+        .form-group { display: flex; flex-direction: column; gap: 10px; }
+        .form-group label { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--neon-dim); letter-spacing: 1px; }
+        .form-group input, .form-group textarea { 
+            background-color: rgba(10, 10, 10, 0.8); border: 1px solid #222; border-radius: 8px; padding: 18px; color: var(--theme-text); 
+            font-family: 'JetBrains Mono', monospace; font-size: 1rem; transition: all 0.3s ease; width: 100%; 
+        }
+        .form-group textarea { resize: vertical; min-height: 150px; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--neon); outline: none; box-shadow: 0 0 15px var(--neon-glow); background-color: #000; }
+
+        .send-message-btn { 
+            background-color: var(--secondary); color: var(--theme-text); border: none; border-radius: 8px; padding: 18px; 
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 3px; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; text-transform: uppercase; 
+        }
+        @media (hover: hover) {
+            .send-message-btn:hover { background-color: var(--neon); color: var(--black); box-shadow: 0 0 30px var(--neon); transform: translateY(-2px); }
+        }
+
+        /* FOOTER */
+        .footer { margin-top: 100px; padding: 40px; text-align: center; border-top: 1px solid var(--neon-dim); font-size: 0.8rem; color: var(--neon-dim); opacity: 0; transition: all 0.8s ease; }
+        .footer.visible { opacity: 1; }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; }
+        .footer-link { color: var(--neon); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.3s; font-size: 0.85rem; letter-spacing: 2px; }
+        @media (hover: hover) { .footer-link:hover { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); } }
+        .footer-name { color: var(--theme-text); font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; letter-spacing: 6px; text-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-glow); }
+
+        /* THE MORPH BOX TRANSITION (Transforms Top, Left, Width, Height exactly to full screen) */
+        .border-zoom-box {
+            position: fixed; border: none; background-color: rgba(0, 0, 0, 0.96); backdrop-filter: blur(8px); z-index: 10000; pointer-events: none; display: none;
+            transition: top 0.45s cubic-bezier(0.77, 0, 0.175, 1), left 0.45s cubic-bezier(0.77, 0, 0.175, 1), width 0.45s cubic-bezier(0.77, 0, 0.175, 1), height 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: inset 0 0 50px var(--neon-glow);
+        }
+        .border-zoom-box.active { display: block; }
+        .zoom-corner { position: absolute; width: 40px; height: 40px; border: 3px solid var(--neon); transition: border-color 0.5s ease; }
+        .zoom-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .zoom-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .zoom-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .zoom-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        /* FULLSCREEN DATA PANEL CSS */
+        .fullscreen-panel { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: transparent; z-index: 10001; 
+            display: none; overflow-y: auto; overflow-x: hidden; overscroll-behavior: none; opacity: 0; transition: opacity 0.3s ease; pointer-events: auto;
+        }
+        .fullscreen-panel.active { display: block; }
+
+        .panel-close { 
+            position: fixed; top: 40px; right: 40px; width: 50px; height: 50px; background-color: var(--black); border: 2px solid var(--neon); color: var(--neon); 
+            font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10003; 
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+        }
+        @media (hover: hover) { .panel-close:hover { background-color: var(--neon); color: var(--black); box-shadow: 0 0 30px var(--neon); } }
+
+        .panel-content { padding: 100px 50px; max-width: 1000px; margin: 0 auto; min-height: 100vh; position: relative; z-index: 10001; transition: opacity 0.2s ease; }
+        .panel-header { text-align: center; margin-bottom: 60px; position: relative; }
+        
+        .panel-visual { width: 150px; height: 150px; margin: 0 auto 30px; position: relative; }
+        .panel-visual-inner { 
+            width: 100%; height: 100%; background-color: var(--black-card); border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; 
+            font-size: 4rem; color: var(--neon); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); position: relative; overflow: hidden; 
+        }
+        .panel-visual-inner::before { 
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
+            background-image: conic-gradient(transparent, var(--neon-glow), transparent); animation: rotate 4s linear infinite; 
+        }
+        .panel-visual i { position: relative; z-index: 1; }
+
+        .panel-title { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: var(--theme-text); letter-spacing: 4px; margin-bottom: 10px; }
+        .panel-subtitle { font-size: 1.2rem; color: var(--secondary); letter-spacing: 2px; }
+        
+        .panel-body { font-size: 1.1rem; line-height: 2; color: var(--neon-dim); text-align: left; }
+        .panel-body h3 { font-family: 'Orbitron', sans-serif; color: var(--secondary); margin: 40px 0 20px; font-size: 1.5rem; letter-spacing: 2px; border-left: 3px solid var(--secondary); padding-left: 15px; }
+        .panel-body ul { list-style: none; padding-left: 20px; }
+        .panel-body li { position: relative; padding-left: 30px; margin: 15px 0; }
+        .panel-body li::before { content: '▸'; position: absolute; left: 0; color: var(--secondary); }
+
+        .fullscreen-panel.active .panel-subtitle, .fullscreen-panel.active .panel-body h3, .fullscreen-panel.active .panel-body p, .fullscreen-panel.active .panel-body ul li {
+            animation: panelFadeInAnim 0.6s ease forwards; opacity: 0; transform: translateY(15px);
+        }
+        @keyframes panelFadeInAnim { to { opacity: 1; transform: translateY(0); } }
+
+        /* custom scrollbars! */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background-color: var(--black-card); border-left: 1px solid #111; }
+        ::-webkit-scrollbar-thumb { background-color: var(--secondary-dim); border-radius: 0px; border: 2px solid var(--black-card); transition: all 0.3s ease; }
+        @media (hover: hover) { ::-webkit-scrollbar-thumb:hover { background-color: var(--neon); box-shadow: 0 0 10px var(--neon-glow); } }
+
+        /* ========================================================================== */
+        /* RESPONSIVE DESIGN FIXES (dont edit this unless you know what ur doing)     */
+        /* ========================================================================== */
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .hologram-container { width: 100%; max-width: 350px; height: 450px; margin: 0 auto; }
+            
+            /* Ditch the 4 corners in vertical mobile only */
+            .corner-bracket { display: none !important; }
+            
+            /* Prevent Header Squishing & Address Stacking */
+            .header-top { flex-wrap: wrap; }
+            .hud-logo { flex: 1; }
+            .mobile-theme-toggle { display: block; }
+            .theme-trigger { display: none; }
+
+            /* Theme Panel Wrapper Fixed Placement Top-Right */
+            .theme-panel-wrapper { bottom: auto !important; top: 60px !important; right: 20px !important; }
+            .theme-panel-wrapper.step-1, .theme-panel-wrapper.step-closing-1 { width: calc(100vw - 40px); max-width: 250px; }
+            .theme-panel-wrapper.step-2 { width: calc(100vw - 40px); max-width: 250px; height: 260px; }
+            .theme-panel-wrapper.step-closing-2 { width: 0px; max-width: 250px; }
+
+            .hud-status { width: 100%; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 15px; }
+            .header-bottom { flex-direction: column; gap: 15px; text-align: center; }
+            
+            /* Compact Sticky Nav Mode */
+            .header-container.compact-mode .hud-status, .header-container.compact-mode .header-bottom { max-height: 0px; opacity: 0; padding: 0; margin: 0; border-top: none; overflow: hidden; pointer-events: none; }
+            .header-container.compact-mode .hud-logo span { display: none; }
+            
+            .header-location { flex-wrap: nowrap; justify-content: center; align-items: center; white-space: nowrap; }
+            #headerIP { margin-left: 10px !important; display: inline-block; width: auto; margin-top: 0; }
+            
+            .header-inner { padding: 15px 50px; }
+            
+            .timeline-branch { left: 20px; }
+            .timeline-item, .timeline-item:nth-child(even) { flex-direction: column; margin-left: 0; padding-left: 50px; align-items: flex-start; }
+            .timeline-content { width: 100%; }
+            .timeline-dot { left: 20px; transform: translateX(-50%); top: 30px; }
+            
+            .command-grid { grid-template-columns: 1fr; }
+            .panel-title { font-size: 2rem; }
+            .user-info-display { display: none !important; }
+            
+            .header-container { background-color: var(--black); border-bottom: 1px solid var(--neon); }
+            .header-container::after { display: none; }
+            .header-container::before { -webkit-mask-image: none; mask-image: none; }
+            .side-ruler, .data-stream-vertical, .crosshair-marker, .hud-element { display: none; }
+
+            .boot-sequence { justify-content: flex-start; padding-top: 30px; padding-bottom: 150px; overflow-y: auto; }
+            .surveillance-header { position: relative; top: 0; left: 0; transform: none; margin-bottom: 20px; width: 100%; }
+            .target-lock { width: 120px; height: 120px; margin: 10px 0 20px 0; }
+            .boot-content { margin-top: 10px; }
+            .breach-area { margin-top: 20px; }
+            
+            .hacked-title { font-size: clamp(1rem, 4vw, 1.8rem); letter-spacing: 2px; }
+            .hacked-name { font-size: clamp(1.2rem, 6vw, 2.5rem); letter-spacing: 4px; }
+            .hacked-subtitle { font-size: clamp(0.7rem, 3vw, 1rem); letter-spacing: 2px; }
+            .hacked-realname { font-size: clamp(0.6rem, 2.5vw, 0.9rem); letter-spacing: 1px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding-left: 15px; padding-right: 15px; }
+            .hero-stats { grid-template-columns: 1fr; gap: 15px; }
+            .contact-terminal { padding: 30px 20px; }
+            
+            .panel-content { padding: 50px 15px; }
+            .panel-title { font-size: 1.8rem; letter-spacing: 2px; }
+            .panel-subtitle { font-size: 1rem; letter-spacing: 1px; }
+            .panel-body { font-size: 0.95rem; line-height: 1.6; }
+            .panel-body h3 { font-size: 1.2rem; margin-top: 25px; margin-bottom: 10px; }
+            
+            .footer-links { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 15px; }
+            .footer-link { font-size: 0.75rem; letter-spacing: 1px; }
+            
+            .hologram-container { height: 350px; }
+            
+            .header-inner { padding: 10px 50px; }
+            .header-top { gap: 5px; margin-bottom: 5px; padding-bottom: 5px; }
+            .hud-logo { font-size: 1rem; }
+            .hud-logo span { font-size: 0.6rem; letter-spacing: 2px; }
+            .hud-status { gap: 8px; margin-top: 5px; }
+            .status-item { font-size: 9px; }
+            .header-bottom { gap: 10px; }
+            
+            .header-location { font-size: 8.5px; flex-wrap: nowrap; white-space: nowrap; }
+            #headerIP { margin-left: 8px !important; display: inline-block; }
+            
+            .header-actions { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+            .social-links { width: auto; justify-content: center; margin-bottom: 0; }
+            .download-btn { width: auto; flex: 1; min-width: 110px; justify-content: center; font-size: 9px; padding: 6px 10px; }
+            
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .card-icon { margin-bottom: 10px; }
+            .timeline-content { padding: 15px; }
+        }
+
+        /* Landscape fix so it doesn't squish everything vertically */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .hero-grid { margin-top: 80px; min-height: auto; }
+            .header-inner { padding-left: 60px; padding-right: 60px; }
+            .boot-sequence { justify-content: flex-start; overflow-y: auto; padding-top: 20px; padding-bottom: 50px; }
+            .user-info-display { display: none !important; }
+            .surveillance-header { position: relative; top: 0; left: 0; transform: none; margin-bottom: 10px; width: 100%; }
+            .target-lock { display: none; }
+            .surveillance-title { font-size: 1.2rem; }
+            .boot-content { margin-top: 5px; }
+            .breach-area { margin-top: 15px; }
+            .hologram-container { height: 300px; }
+            .hacked-name { font-size: 3rem; }
+            .theme-panel-wrapper.step-2 { height: 220px; }
+        }
+    </style>
+</head>
+<body class="boot-active">
+
+    <!-- GLOBAL SCAN LINE -->
+    <div class="global-scan-line"></div>
+
+    <!-- BACKGROUND EFFECTS -->
+    <canvas id="matrix-canvas"></canvas>
+    <div class="hex-grid" id="hexGrid"></div>
+    <div class="vignette"></div>
+    
+    <!-- NERDY DECORATIONS ON THE SIDES -->
+    <div class="side-ruler"></div>
+    <div class="data-stream-vertical">10110<br>00101<br>11011<br>00000<br>11110<br>01010</div>
+    
+    <div class="crosshair-marker" style="top: 20%; left: 8%;"></div>
+    <div class="crosshair-marker" style="bottom: 30%; right: 5%;"></div>
+    <div class="crosshair-marker" style="top: 75%; left: 12%;"></div>
+    
+    <!-- DO NOT EDIT IDS IN HERE, JS CONTROLS THEM -->
+    <div class="hud-element top-center" id="hudTopCenterText">SYS.VER_2.1.25 // SECURE</div>
+    <div class="hud-element bottom-left">MEM_ALLOC: <span id="memAlloc">0x04F</span></div>
+    <div class="hud-element bottom-right" id="hudBottomRightText">OVERRIDE // ACTIVE</div>
+
+    <div class="corner-bracket tl"></div>
+    <div class="corner-bracket tr"></div>
+    <div class="corner-bracket bl"></div>
+    <div class="corner-bracket br"></div>
+
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+    
+    <!-- GLITCH AND SWEEP FX -->
+    <div class="smooth-glitch" id="smoothGlitch"></div>
+    <div class="scan-sweep" id="scanSweep"></div>
+    <div class="program-scanline" id="programScanline"></div>
+    <div class="cyber-burst" id="cyberBurst"></div>
+
+    <!-- SETTINGS / THEMES -->
+    <div class="theme-trigger spider-glitch" onclick="pop_open_settings()" title="System Settings">
+        <i class="fas fa-cog"></i>
+    </div>
+    
+    <div class="theme-panel-wrapper" id="themePanelWrapper">
+        <div class="theme-panel-content" id="themePanelContent">
+            <div style="font-size: 10px; color: var(--secondary); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px;">// Protocol Select</div>
+            
+            <div class="theme-option" onclick="apply_color_theme_bruh('green')">
+                <div class="theme-dot" style="background: #00ff41;"></div>
+                <span class="type-label" id="typeLabel-green"></span>
+            </div>
+            <div class="theme-option" onclick="apply_color_theme_bruh('amber')">
+                <div class="theme-dot" style="background: #ffb000;"></div>
+                <span class="type-label" id="typeLabel-amber"></span>
+            </div>
+            <div class="theme-option" onclick="apply_color_theme_bruh('red')">
+                <div class="theme-dot" style="background: #ff0040;"></div>
+                <span class="type-label" id="typeLabel-red"></span>
+            </div>
+            <div class="theme-option" onclick="apply_color_theme_bruh('cyan')">
+                <div class="theme-dot" style="background: #00ffff;"></div>
+                <span class="type-label" id="typeLabel-cyan"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expanding click box -->
+    <div class="border-zoom-box" id="borderZoomBox">
+        <div class="zoom-corner tl"></div>
+        <div class="zoom-corner tr"></div>
+        <div class="zoom-corner bl"></div>
+        <div class="zoom-corner br"></div>
+    </div>
+
+    <!-- THIS IS WHERE JS INJECTS THE POPUP INFO -->
+    <div class="fullscreen-panel" id="fullscreenPanel">
+        <button class="panel-close" onclick="hide_big_popup_and_glitch()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="panel-content" id="panelContent">
+            <!-- Data is injected dynamically by JavaScript from the top config var -->
+        </div>
+    </div>
+
+    <!-- FAKE BOOT SEQUENCE THINGY -->
+    <div class="boot-sequence" id="bootSequence">
+        <div class="user-info-display" id="userInfoDisplay">
+            <div class="user-info-line">
+                <span class="user-info-label">TARGET:</span>
+                <span id="targetIP">Scanning...</span>
+            </div>
+            <div class="user-info-line">
+                <span class="user-info-label">LOCATION:</span>
+                <span id="targetLocation">Detecting...</span>
+            </div>
+            <div class="user-info-line">
+                <span class="user-info-label">BROWSER:</span>
+                <span id="targetBrowser">Identifying...</span>
+            </div>
+            <div class="user-info-line">
+                <span class="user-info-label">STATUS:</span>
+                <span style="color: var(--neon);">ONLINE</span>
+            </div>
+        </div>
+
+        <div class="surveillance-header spider-glitch">
+            <div class="surveillance-title" id="bootTitleText">⚠ DOCTERGREEN SYSTEMS ACTIVE ⚠</div>
+            <div class="surveillance-sub" id="bootSubText">PORTFOLIO BREACH PROTOCOL // UNAUTHORIZED ACCESS DETECTED</div>
+        </div>
+        
+        <div class="target-lock">
+            <div class="target-box"></div>
+            <div class="target-inner"></div>
+            <div class="target-core"></div>
+        </div>
+        
+        <!-- text populates from the js config -->
+        <div class="boot-content" id="bootLinesContainer"></div>
+
+        <div class="breach-area">
+            <button class="access-granted" id="breachBtn" onclick="do_the_hacker_thing()">
+                [ INITIATE BREACH ]
+            </button>
+            <button class="skip-button" onclick="skip_intro_cause_im_impatient()">
+                [ OR SKIP BREACH → GO DIRECT ]
+            </button>
+        </div>
+    </div>
+
+    <div class="hacking-sequence" id="hackingSequence">
+        <div id="miniTerminal" class="mini-terminal"></div>
+        <div class="hacking-bg" id="hackingBg"></div>
+        <div class="infrastructure" id="infrastructure"></div>
+        
+        <div class="hacking-content">
+            <div class="hacking-subtext" id="hackingSubtext">> 0x00000000</div>
+            <div class="hacking-text spider-glitch" id="hackingText">> INITIALIZING...</div>
+            <div class="hacking-progress-container" id="progressContainer">
+                <div class="hacking-progress-label">
+                    <span>INFILTRATION PROGRESS</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="hacking-progress">
+                    <div class="hacking-progress-fill" id="hackingProgress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final screen before loading the main page -->
+    <div class="hacked-message" id="hackedMessage">
+        <div class="hacked-title" id="hackedTitle"></div>
+        <div class="hacked-name" id="hackedName"></div>
+        <div class="hacked-subtitle" id="hackedSubtitle"></div>
+        <div class="hacked-realname" id="hackedRealname"></div>
+    </div>
+
+    <!-- MAIN NAVBAR / HEADER -->
+    <div class="header-container" id="headerContainer">
+        <div class="header-inner">
+            <div class="header-top">
+                <div class="hud-logo spider-glitch" id="navLogoTitle">
+                    DOCTERGREEN.EXE
+                    <span id="navLogoSub">SAMI SHAH // FULL-STACK DEVELOPER</span>
+                </div>
+                
+                <i class="fas fa-cog mobile-theme-toggle" onclick="pop_open_settings()" title="System Settings"></i>
+                
+                <div class="hud-status">
+                    <div class="status-item">
+                        <div class="status-indicator"></div>
+                        <span>SYSTEM: ONLINE</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-clock" style="color: var(--neon);"></i>
+                        <span id="liveClock">SYS.TIME: --:--:--</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-network-wired" style="color: var(--neon);"></i>
+                        <span id="livePing">PING: 14ms</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-map-marker-alt" style="color: var(--neon);"></i>
+                        <span id="navCoordLoc">LOC: 43.5183 N, 79.8774 W</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-bottom">
+                <div class="header-location">
+                    <img src="https://flagcdn.com/w40/ca.png" alt="Canada" class="location-flag-img" id="headerFlagImg">
+                    <span id="headerLocation">Milton, Ontario, Canada</span>
+                    <span style="color: var(--neon-dim); margin-left: 10px;" id="headerIP">IP: ---.---.---.---</span>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="social-links">
+                        <!-- Edit social links below! -->
+                        <a href="https://github.com/Doctergreen" target="_blank" class="social-link" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/sami-shah-dev/" target="_blank" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:shahsami440@gmail.com" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                    <a href="Sami_Shah_Resume.pdf" target="_blank" class="download-btn">
+                        <i class="fas fa-file-pdf"></i> Resume
+                    </a>
+                    <a href="Sami_Shah_CV.pdf" target="_blank" class="download-btn">
+                        <i class="fas fa-file-alt"></i> CV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PORTFOLIO CONTENT STUFF -->
+    <!-- EDIT THESE HARDCODED TEXTS IN THE HTML Direct TO PRESERVE SEO & STYLING -->
+    <div class="container" id="mainContent">
+
+        <div class="hero-grid">
+            <div class="hero-text">
+                <div class="hero-intro" id="heroIntroTxt">Operative Profile // Classified</div>
+                <h1 id="heroTitle" class="spider-glitch">
+                    <span id="heroTitle1">SAMI SHAH</span><br>
+                    <span id="heroTitle2" style="color: var(--secondary); font-size: 0.6em; letter-spacing: 6px;">aka DOCTERGREEN.EXE</span>
+                </h1>
+                
+                <div class="hero-mission">
+                    <div class="mission-title spider-glitch" id="heroMissTitle">MISSION OBJECTIVE</div>
+                    <div class="mission-text" id="heroMissText">
+                        To leverage advanced systems engineering, software development, and 3D environment architecture to build robust, scalable platforms and immersive digital tools.
+                    </div>
+                </div>
+                
+                <p class="hero-subtitle spider-glitch" id="heroSubtitle">
+                    Software Developer & Digital Architect | International Student from Canada<br>
+                    Ontario, Canada <img src="https://flagcdn.com/w20/ca.png" alt="Canada" style="vertical-align: middle; margin-left: 5px;">
+                </p>
+                
+                <!-- Terminal block -->
+                <div class="terminal-window" id="terminalWindow">
+                    <div class="terminal-header">
+                        <div class="terminal-dot" style="background: #ff5f56;"></div>
+                        <div class="terminal-dot" style="background: #ffbd2e;"></div>
+                        <div class="terminal-dot" style="background: #27c93f;"></div>
+                        <span style="margin-left: 10px; font-size: 11px; color: var(--neon-dim);">root@doctergreen:~</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">root@doctergreen:~$</span>
+                            <span class="terminal-command" id="typeCommand"></span>
+                            <span class="typing-cursor" id="mainCursor"></span>
+                        </div>
+                        <div class="terminal-output" id="terminalOutput" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Number blocks, text is easy to change right here -->
+                <div class="hero-stats">
+                    <div class="stat-box scroll-glitch-target" id="stat1" onclick="expandStat(this, 'experience')">
+                        <div class="hover-brackets"></div>
+                        <span class="stat-number">2017</span>
+                        <div class="stat-label">Active Since</div>
+                    </div>
+                    <div class="stat-box scroll-glitch-target" id="stat2" onclick="expandStat(this, 'projects')">
+                        <div class="hover-brackets"></div>
+                        <span class="stat-number">50+</span>
+                        <div class="stat-label">Deployed Systems</div>
+                    </div>
+                    <div class="stat-box scroll-glitch-target" id="stat3" onclick="expandStat(this, 'skills')">
+                        <div class="hover-brackets"></div>
+                        <span class="stat-number">∞</span>
+                        <div class="stat-label">Lines of Logic</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-display" id="characterDisplay">
+                <div class="hologram-container">
+                    <div class="hologram-ring"></div>
+                    <div class="hologram-ring"></div>
+                    <div class="hologram-ring"></div>
+                    <div class="hologram-lines"></div>
+                    <div class="profile-crt-overlay"></div>
+                    <div class="scan-line"></div>
+                    <!-- Put your image link here -->
+                    <img src="sami-oc.webp" alt="Sami OC" class="character-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- =================== EXP TIMELINE =================== -->
+        <div class="section-header scroll-glitch-target" id="expHeader">
+            <div class="section-icon"><i class="fas fa-briefcase"></i></div>
+            <h2 class="section-title">Professional Experience</h2>
+        </div>
+
+        <div class="timeline-container" id="timelineContainer">
+            <div class="timeline-branch"></div>
+            
+            <div class="timeline-item scroll-glitch-target">
+                <!-- Change "comsats" arg to match the ID in the JS Config at the top to load custom popups -->
+                <div class="timeline-content" onclick="expandTimeline(this, 'comsats')">
+                    <div class="hover-brackets"></div>
+                    <div class="timeline-date">2025 - PRESENT</div>
+                    <div class="timeline-title">Class Representative & Cohort Liaison</div>
+                    <div class="timeline-company">International University Level</div>
+                    <div class="timeline-desc">Bridging communications, academic scheduling, and operational logistics.</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item scroll-glitch-target">
+                <div class="timeline-content" onclick="expandTimeline(this, 'gamedev')">
+                    <div class="hover-brackets"></div>
+                    <div class="timeline-date">2017 - PRESENT</div>
+                    <div class="timeline-title">Independent Developer & Systems Engineer</div>
+                    <div class="timeline-company">Roblox Studio / Freelance</div>
+                    <div class="timeline-desc">Architecting robust backend data storage and multiplayer mechanics.</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item scroll-glitch-target">
+                <div class="timeline-content" onclick="expandTimeline(this, 'theatre')">
+                    <div class="hover-brackets"></div>
+                    <div class="timeline-date">2018 - 2019</div>
+                    <div class="timeline-title">Technical Scripter & 3D Animator</div>
+                    <div class="timeline-company">The Royal Majestic Theatre Company</div>
+                    <div class="timeline-desc">Engineered vector-based theater simulation for digital production.</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item scroll-glitch-target">
+                <div class="timeline-content" onclick="expandTimeline(this, 'design')">
+                    <div class="hover-brackets"></div>
+                    <div class="timeline-date">2020 - 2025</div>
+                    <div class="timeline-title">Graphic Designer</div>
+                    <div class="timeline-company">Hawa Care Non-Profit Organization</div>
+                    <div class="timeline-desc">Designed high-impact visual assets leveraging UI/UX design principles.</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+
+        <!-- =================== SKILLS MATRIX =================== -->
+        <div class="section-header scroll-glitch-target" id="skillsHeader">
+            <div class="section-icon"><i class="fas fa-code"></i></div>
+            <h2 class="section-title">Technical Arsenal</h2>
+        </div>
+
+        <div class="skill-matrix" id="skillsGrid">
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'java')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Java</span>
+                    <span class="skill-level">EXPERT</span>
+                </div>
+                <!-- change percentage here inside style="--fill-width: X%;" -->
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 90%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'lua')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Luau / Lua</span>
+                    <span class="skill-level">MASTER</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 95%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'cpp')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">C++</span>
+                    <span class="skill-level">ADVANCED</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 85%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'python')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Python</span>
+                    <span class="skill-level">PROFICIENT</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 75%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'blender')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Blender / 3D Rigging</span>
+                    <span class="skill-level">ADVANCED</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 88%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'hardware')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Hardware Configuration</span>
+                    <span class="skill-level">EXPERT</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 92%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'smarthome')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">Infrastructure Studies</span>
+                    <span class="skill-level">PROFICIENT</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 78%;"></div></div>
+            </div>
+            <div class="skill-node scroll-glitch-target" onclick="expandSkill(this, 'uiux')">
+                <div class="hover-brackets"></div>
+                <div class="skill-header">
+                    <span class="skill-name">UI Scaling / UX</span>
+                    <span class="skill-level">ADVANCED</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill-width: 85%;"></div></div>
+            </div>
+        </div>
+
+        <!-- =================== EDU & INFO CARDS =================== -->
+        <div class="section-header scroll-glitch-target" id="eduHeader">
+            <div class="section-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h2 class="section-title">Education</h2>
+        </div>
+
+        <div class="command-grid" id="eduGrid">
+            <div class="command-card scroll-glitch-target" onclick="expandCard(this, 'university')">
+                <div class="hover-brackets"></div>
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-university"></i></div>
+                    <div class="card-title-area">
+                        <div class="card-title">BS Computer Science</div>
+                        <div class="card-subtitle">International Student Enrollment</div>
+                    </div>
+                    <div class="card-date">2025 - 2029</div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>Object-Oriented Programming & Custom File Serialization</li>
+                        <li>Digital marketplace MIS project</li>
+                        <li>Expository Writing: CRISPR Ethical Research</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-card scroll-glitch-target" onclick="expandCard(this, 'sherwood')">
+                <div class="hover-brackets"></div>
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-school"></i></div>
+                    <div class="card-title-area">
+                        <div class="card-title">High School Diploma</div>
+                        <div class="card-subtitle">Sherwood Heights Collegiate</div>
+                    </div>
+                    <div class="card-date">2020 - 2024</div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>Maintained top academic standing</li>
+                        <li>Robotics Club, Python & Java</li>
+                        <li>DECA, Peer Mentoring & Leadership</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header scroll-glitch-target" id="infoHeader">
+            <div class="section-icon"><i class="fas fa-globe"></i></div>
+            <h2 class="section-title">Logistics & Network</h2>
+        </div>
+
+        <div class="command-grid" id="infoGrid">
+            <div class="command-card scroll-glitch-target" onclick="expandCard(this, 'languages')">
+                <div class="hover-brackets"></div>
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-language"></i></div>
+                    <div class="card-title-area">
+                        <div class="card-title">Language Proficiency</div>
+                        <div class="card-subtitle">Communication Protocols</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>English [NATIVE]<br><span style="color: var(--neon);">████████████ 100%</span></li>
+                        <li>Urdu [INTERMEDIATE]<br><span style="color: var(--secondary);">████████░░░░ 70%</span></li>
+                        <li>Punjabi [INTERMEDIATE]<br><span style="color: var(--secondary);">████████░░░░ 65%</span></li>
+                        <li>French [NOVICE]<br><span style="color: var(--neon-dark);">████░░░░░░░░ 30%</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-card scroll-glitch-target" onclick="expandCard(this, 'references')">
+                <div class="hover-brackets"></div>
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-address-book"></i></div>
+                    <div class="card-title-area">
+                        <div class="card-title">Professional Network</div>
+                        <div class="card-subtitle">Industry References</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>Justin Apostol</strong> — Game Developer, Philippines</li>
+                        <li><strong>Faizan Khan</strong> — Computer Shop Technician</li>
+                        <li><strong>Hawa Care Non-Profit</strong> — Charity Head CEO<br>
+                        <span style="color: var(--theme-text); font-size: 0.85rem;">+1 (281) 965-1891 (More on request)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="contact-terminal" id="contactSection">
+            <h2 class="contact-title spider-glitch">ESTABLISH CONNECTION</h2>
+            <p class="contact-desc">Open to product engineering roles, freelance builds, and collaborative system architecture.</p>
+            <div class="contact-form">
+                <div class="form-group">
+                    <label for="contactName">Name</label>
+                    <input type="text" id="contactName" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail" placeholder="you@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" placeholder="What are you building?"></textarea>
+                </div>
+                <button class="send-message-btn" onclick="yeet_email_to_me()">Send message</button>
+            </div>
+        </div>
+
+        <footer class="footer" id="footer">
+            <div class="footer-links">
+                <a href="https://github.com/Doctergreen" target="_blank" class="footer-link"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://www.linkedin.com/in/sami-shah-dev/" target="_blank" class="footer-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="mailto:shahsami440@gmail.com" class="footer-link"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+            <div style="margin-top: 40px;">
+                <span class="footer-name">SAMI SHAH</span><br><br>
+                <span style="color: var(--neon);">DOCTERGREEN.EXE</span> // PORTFOLIO_ACTIVE v2.1.25<br>
+                Software Developer & Digital Architect | Milton, Ontario, Canada <img src="https://flagcdn.com/w20/ca.png" alt="Canada" style="vertical-align: middle; margin-left: 5px;">
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========================================================================== -->
+    <!-- JAVASCRIPT SYSTEM ENGINE                                                   -->
+    <!-- ========================================================================== -->
+    <script>
+        // ==========================================================================
+        // 🛠️ EDIT ALL YOUR TEXT AND INFO HERE 🛠️
+        // You asked to put modifiable stuff at the top so here is all the dynamic 
+        // data for the popups, hacking screens, and terminal. 
+        // HTML text is still in the HTML part above cause otherwise SEO breaks and 
+        // css clip-paths get weird if JS crashes.
+        // ==========================================================================
+        const MY_PORTFOLIO_DATA = {
+
+            // =======================================
+            // 1) THE FAKE HACKING / BOOT STUFF
+            // =======================================
+            bootScreenLines: [
+                "> WARNING: SECURITY BREACH DETECTED",
+                "> Initializing Doctergreen protocols...",
+                "> Bypassing firewall encryption...",
+                "> Accessing secure database...",
+                "> Target identified: SAMI SHAH",
+                "> Location: Ontario, Canada",
+                "> Designation: Software Developer & Systems Engineer",
+                "> CLEARANCE LEVEL: TOP SECRET",
+                "> Database access granted"
+            ],
+            
+            // these show when the progress bar is filling up
+            hackerSpamTexts: [
+                "BYPASSING SECURITY...", 
+                "INJECTING PAYLOAD...", 
+                "BREACHING FIREWALL...",
+                "ACCESSING ROOT...", 
+                "DOWNLOADING ASSETS...", 
+                "ESTABLISHING BACKDOOR...", 
+                "SYSTEM COMPROMISED."
+            ],
+
+            // the giant text that pops up after breach success
+            hackedSuccessMsg: {
+                title: "⚠ SYSTEM BREACHED ⚠",
+                name: "DOCTERGREEN.EXE",
+                subtitle: "HAS COMPROMISED YOUR DEVICE",
+                realName: "OPERATIVE: SAMI SHAH | DIGITAL ARCHITECT"
+            },
+
+            // mini terminal spam in top left during hack
+            miniTerminalLines: [
+                "> root@sys: access overriding...", 
+                "> fetching keys... OK", 
+                "> executing script...", 
+                "> 0x0A94F buffer overflow...", 
+                "> hijacking process 8912", 
+                "> DOCTERGREEN module loaded", 
+                "> rendering payload..."
+            ],
+
+            // =======================================
+            // 2) TERMINAL TYPING EFFECT (Main Page)
+            // =======================================
+            mainTerminalTypeCommand: "whoami",
+            mainTerminalOutputs: [
+                "Java/Lua/C++ Systems Developer",
+                "3D Rigging & Blender Architect", 
+                "UI Scaling & UX Expert",
+                "Hardware & Network Config Lead",
+                "Theoretical Architecture Studies",
+                "Project Logistics Leader",
+                "Digital Architecture Orchestrator"
+            ],
+
+            // =======================================
+            // 3) FULLSCREEN POPUP DATA (Experience/Edu/Info)
+            // =======================================
+            popupPanels: {
+                'comsats': {
+                    icon: 'fa-users-cog',
+                    title: 'Cohort Representative',
+                    subtitle: 'International University Level',
+                    content: `
+                        <h3>Administrative Orchestration</h3>
+                        <p>Acting as the primary bridge between the faculty and a cohort of 50+ students. Executed administrative oversight, ensuring seamless communication across all channels.</p>
+                        <h3>Key Operations</h3>
+                        <ul>
+                            <li>Bridging communications, academic scheduling, and operational logistics.</li>
+                            <li>Facilitated coordination for Management Information System implementations.</li>
+                            <li>Employed advanced conflict resolution strategies to maintain academic alignment.</li>
+                        </ul>
+                    `
+                },
+                'gamedev': {
+                    icon: 'fa-gamepad',
+                    title: 'Independent Developer',
+                    subtitle: 'Systems Engineering & Game Architecture',
+                    content: `
+                        <h3>Digital Environment Architecture</h3>
+                        <p>Leveraging Roblox Studio to architect intricate multiplayer mechanics. From custom interfaces to character interactions, built robust backends supporting immersive game loops.</p>
+                        <h3>Development Stack</h3>
+                        <ul>
+                            <li>Architected and deployed complex multiplayer gameplay mechanics.</li>
+                            <li>Engineered robust backend data-storage systems for optimized stability.</li>
+                            <li>Developed high-fidelity 3D assets and animations leveraging Lua and Blender.</li>
+                        </ul>
+                    `
+                },
+                'theatre': {
+                    icon: 'fa-theater-masks',
+                    title: 'Technical Scripter & Animator',
+                    subtitle: 'The Royal Majestic Theatre Company',
+                    content: `
+                        <h3>Digital Theater Production</h3>
+                        <p>Led the technical backend generation for live-scale interactive theatrical performances inside a multiplayer environment.</p>
+                        <h3>Implementation Details</h3>
+                        <ul>
+                            <li>Engineered a complex, vector-based theater simulation for the digital production of "King Kong the Musical".</li>
+                            <li>Collaborated with creative directors to seamlessly translate physical concepts into interactive, digital realities.</li>
+                        </ul>
+                    `
+                },
+                'design': {
+                    icon: 'fa-paint-brush',
+                    title: 'Graphic Designer',
+                    subtitle: 'Hawa Care Non-Profit Organization',
+                    content: `
+                        <h3>Visual Identity & UI/UX</h3>
+                        <p>Led the visual strategy and design generation for charitable campaigns, focusing on direct digital engagement.</p>
+                        <h3>Project Scope</h3>
+                        <ul>
+                            <li>Designed high-impact visual assets and promotional layouts.</li>
+                            <li>Leveraged UI/UX design principles to increase interactive retention.</li>
+                        </ul>
+                    `
+                },
+                'university': {
+                    icon: 'fa-laptop-code',
+                    title: 'BS Computer Science',
+                    subtitle: 'International Student Enrollment (2025 - 2029)',
+                    content: `
+                        <h3>Academic Core</h3>
+                        <p>Pursuing a comprehensive Computer Science curriculum focusing on core software engineering principles and data architectures.</p>
+                        <h3>Coursework & Projects</h3>
+                        <ul>
+                            <li>Object-Oriented Programming (OOP): Engineered a comprehensive digital marketplace Management Information System (MIS) utilizing advanced custom file serialization.</li>
+                            <li>Discrete Structures & Applied Physics: Focused on logical frameworks, computational mathematics, and engineering principles.</li>
+                            <li>Authored extensive academic research on the cultural blind spots in Global Public Discourse regarding CRISPR.</li>
+                        </ul>
+                    `
+                },
+                'sherwood': {
+                    icon: 'fa-school',
+                    title: 'High School Diploma',
+                    subtitle: 'Sherwood Heights Collegiate (Graduated 2024)',
+                    content: `
+                        <h3>Secondary Foundation</h3>
+                        <p>Completed an advanced STEM-focused curriculum, cementing early passions for robotics, programming, and systemic logic.</p>
+                        <h3>Activities</h3>
+                        <ul>
+                            <li>Maintained top academic standing while assisting teachers and mentoring peers.</li>
+                            <li>Developed early programming proficiency in HTML, Python, and Java.</li>
+                            <li>Active member of the Robotics Club and DECA business competitions.</li>
+                        </ul>
+                    `
+                },
+                'languages': {
+                    icon: 'fa-language',
+                    title: 'Language Proficiency',
+                    subtitle: 'Communication Protocols',
+                    content: `
+                        <h3>Native Execution</h3>
+                        <p>Absolute native fluency in English, enabling precise documentation writing, clear stakeholder communication, and leadership negotiation.</p>
+                        <h3>Secondary Protocols</h3>
+                        <ul>
+                            <li><strong>Urdu [INTERMEDIATE]</strong> - Conversational and structural understanding.</li>
+                            <li><strong>Punjabi [INTERMEDIATE]</strong> - Regional dialect proficiency.</li>
+                            <li><strong>French [NOVICE]</strong> - Basic syntax and vocabulary foundation.</li>
+                        </ul>
+                    `
+                },
+                'references': {
+                    icon: 'fa-address-book',
+                    title: 'Professional Network',
+                    subtitle: 'Industry References',
+                    content: `
+                        <h3>Validated Network</h3>
+                        <p>A proven track record of reliable teamwork and technical deployment.</p>
+                        <ul>
+                            <li><strong>Justin Apostol</strong> — Game Developer, Philippines. Technical development and architecture collaboration.</li>
+                            <li><strong>Faizan Khan</strong> — Computer Shop Technician. Hardware optimization logistics.</li>
+                            <li><strong>Hawa Care</strong> — Charity Head CEO, Texas. Visual asset and layout integration.<br>
+                            <span style="color: var(--neon);">Contact: +1 (281) 965-1891</span><br>
+                            <em style="font-size: 0.85rem; color: var(--neon-dim);">*More references can be provided on request.</em></li>
+                        </ul>
+                    `
+                },
+                'experience': {
+                    icon: 'fa-briefcase',
+                    title: 'Active Experience',
+                    subtitle: 'Career Timeline Overview',
+                    content: `
+                        <h3>Operational History</h3>
+                        <p>A dynamic timeline spanning from graphic design logic for non-profits to complex backend Lua data-storage mechanisms.</p>
+                    `
+                },
+                'projects': {
+                    icon: 'fa-project-diagram',
+                    title: 'Deployed Systems',
+                    subtitle: 'Project Portfolio',
+                    content: `
+                        <h3>System Deployments</h3>
+                        <p>Over 50 unique instances of game mechanics, architectural studies, and administrative platforms successfully analyzed and executed.</p>
+                    `
+                },
+                'skills': {
+                    icon: 'fa-code',
+                    title: 'Lines of Logic',
+                    subtitle: 'Technical Proficiency',
+                    content: `
+                        <h3>The Arsenal</h3>
+                        <p>Proficient across multiple syntaxes, specializing in object-oriented programming, game logic (Luau), and 3D space rendering.</p>
+                    `
+                }
+            },
+
+            // =======================================
+            // 4) FULLSCREEN POPUP DATA (Skill Nodes)
+            // =======================================
+            skillPanels: {
+                'java': {
+                    icon: 'fa-coffee',
+                    title: 'Java Architecture',
+                    subtitle: 'Object-Oriented Mastery',
+                    content: `
+                        <h3>System Foundations</h3>
+                        <p>Applying Java to build robust backend systems, process heavy computational tasks, and structure clean, modular OOP architectures.</p>
+                    `
+                },
+                'lua': {
+                    icon: 'fa-moon',
+                    title: 'Luau Scripting',
+                    subtitle: 'Roblox Engine Mechanics',
+                    content: `
+                        <h3>Game Loop Logic</h3>
+                        <p>Deep expertise in Luau for Roblox Studio. Architected everything from intricate NPC behaviors to server-to-client network synchronization.</p>
+                    `
+                },
+                'cpp': {
+                    icon: 'fa-microchip',
+                    title: 'C++ Systems',
+                    subtitle: 'Low-Level Processing',
+                    content: `
+                        <h3>Memory & Performance</h3>
+                        <p>Utilizing C++ for assignments requiring direct hardware interaction, memory allocation control, and raw execution speed.</p>
+                    `
+                },
+                'python': {
+                    icon: 'fa-python',
+                    title: 'Python Scripts',
+                    subtitle: 'Automation & Logic',
+                    content: `
+                        <h3>Data & Automation</h3>
+                        <p>Writing clean, efficient Python scripts for rapid prototyping, data sorting, and automating redundant systems.</p>
+                    `
+                },
+                'blender': {
+                    icon: 'fa-cube',
+                    title: 'Blender / 3D Rigging',
+                    subtitle: 'Mesh & Environment Design',
+                    content: `
+                        <h3>Digital Sculpting</h3>
+                        <p>Creating custom 3D meshes, applying structural rigging for animation, and optimizing vertex counts for engine implementation.</p>
+                    `
+                },
+                'uiux': {
+                    icon: 'fa-paint-brush',
+                    title: 'UI Scaling & UX',
+                    subtitle: 'Interface Generation',
+                    content: `
+                        <h3>Dynamic Layouts</h3>
+                        <p>Designing user interfaces that automatically scale and adapt to screen resolutions, prioritizing usability and modern aesthetics.</p>
+                    `
+                },
+                'hardware': {
+                    icon: 'fa-memory',
+                    title: 'Hardware Configuration',
+                    subtitle: 'PC & Component Optimization',
+                    content: `
+                        <h3>Physical Architecture</h3>
+                        <p>Expertise in maintaining PC components, applying thermal solutions, and adjusting Windows registry settings for peak rendering output.</p>
+                    `
+                },
+                'smarthome': {
+                    icon: 'fa-network-wired',
+                    title: 'Security Architecture Studies',
+                    subtitle: 'Network Understanding',
+                    content: `
+                        <h3>Network Defense</h3>
+                        <p>Extensive theoretical understanding of secure, localized Wi-Fi frameworks specifically tailored for solar and indoor continuous camera monitoring.</p>
+                    `
+                }
+            }
+        };
+
+        // ==========================================================================
+        // SETUP BOOT TEXT ON LOAD
+        // ==========================================================================
+        const boot_container = document.getElementById('bootLinesContainer');
+        MY_PORTFOLIO_DATA.bootScreenLines.forEach((lineText, idx) => {
+            let div = document.createElement('div');
+            // hacky way to add classes based on text content lol
+            div.className = 'boot-line ' + (lineText.includes('WARNING') || lineText.includes('SECRET') ? 'boot-warning' : (lineText.includes('granted') || lineText.includes('identified') ? 'boot-success' : ''));
+            div.textContent = lineText;
+            boot_container.appendChild(div);
+        });
+
+
+        // ==========================================================================
+        // CLOCK, PING & HUD STUFF
+        // ==========================================================================
+        function refresh_clock_thingy() {
+            let clock_ui = document.getElementById('liveClock');
+            if (clock_ui) {
+                let now = new Date();
+                let hr = String(now.getHours()).padStart(2, '0');
+                let min = String(now.getMinutes()).padStart(2, '0');
+                let sec = String(now.getSeconds()).padStart(2, '0');
+                clock_ui.textContent = `SYS.TIME: ${hr}:${min}:${sec}`;
+            }
+        }
+        setInterval(refresh_clock_thingy, 1000);
+        refresh_clock_thingy();
+
+        function fake_ping_generator() {
+            let ping_ui = document.getElementById('livePing');
+            if (ping_ui) {
+                // generate a fake ping between 10 and 24 lol
+                let rand_ping = Math.floor(Math.random() * 15) + 10; 
+                ping_ui.textContent = `PING: ${rand_ping}ms`;
+            }
+        }
+        setInterval(fake_ping_generator, 2000);
+        fake_ping_generator();
+        
+        // mem alloc spamming random hex
+        setInterval(() => {
+            let mem_ui = document.getElementById('memAlloc');
+            if (mem_ui) {
+                mem_ui.textContent = '0x' + Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
+            }
+        }, 150);
+
+
+        // ==========================================================================
+        // MATRIX RAIN BACKGROUND LOGIC (from codepen or smth idk it works)
+        // ==========================================================================
+        const matrix_canvas = document.getElementById('matrix-canvas');
+        const m_ctx = matrix_canvas.getContext('2d');
+        let current_matrix_color = '#00ff41'; // default green
+        
+        matrix_canvas.width = window.innerWidth;
+        matrix_canvas.height = window.innerHeight;
+
+        const cool_matrix_chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789SAMISHAHDOCTERGREENEXE'.split('');
+        const font_sz = 14;
+        const total_columns = matrix_canvas.width / font_sz;
+        const matrix_drops_array = [];
+
+        // setup drops
+        for (let i = 0; i < total_columns; i++) {
+            matrix_drops_array[i] = Math.random() * -100;
+        }
+
+        function render_matrix_frame() {
+            m_ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // leaves that trail effect
+            m_ctx.fillRect(0, 0, matrix_canvas.width, matrix_canvas.height);
+
+            m_ctx.fillStyle = current_matrix_color;
+            m_ctx.font = font_sz + 'px monospace';
+
+            for (let i = 0; i < matrix_drops_array.length; i++) {
+                const char_to_draw = cool_matrix_chars[Math.floor(Math.random() * cool_matrix_chars.length)];
+                m_ctx.fillText(char_to_draw, i * font_sz, matrix_drops_array[i] * font_sz);
+
+                // reset drop to top randomly
+                if (matrix_drops_array[i] * font_sz > matrix_canvas.height && Math.random() > 0.975) {
+                    matrix_drops_array[i] = 0;
+                }
+                matrix_drops_array[i]++;
+            }
+        }
+        setInterval(render_matrix_frame, 35);
+
+        // fix canvas squish if user resizes window
+        window.addEventListener('resize', () => {
+            matrix_canvas.width = window.innerWidth;
+            matrix_canvas.height = window.innerHeight;
+        });
+
+
+        // ==========================================================================
+        // GRAB USER IP API (WITH FAKE DECRYPT DELAY)
+        // ==========================================================================
+        function grab_user_ip_and_stuff() {
+            document.getElementById('targetLocation').textContent = 'Milton, Ontario, Canada';
+            
+            let ip_target = document.getElementById('targetIP');
+            let ip_header = document.getElementById('headerIP');
+            
+            // show funny hex spam while waiting for api
+            let decrypt_anim = setInterval(() => {
+                let r_hex = '0x' + Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
+                ip_target.textContent = 'DECRYPTING ' + r_hex;
+                ip_header.textContent = 'IP: ' + r_hex;
+            }, 30);
+
+            // ipify is free and requires no key bless them
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => {
+                    clearInterval(decrypt_anim);
+                    ip_target.textContent = data.ip;
+                    ip_header.textContent = 'IP: ' + data.ip;
+                })
+                .catch(() => {
+                    // if they use adblocker or api dies
+                    clearInterval(decrypt_anim);
+                    ip_target.textContent = 'CLASSIFIED';
+                    ip_header.textContent = 'IP: CLASSIFIED';
+                });
+
+            // get basic browser info
+            let browser_raw = navigator.userAgent.split(')')[0] + ')';
+            let browser_clean = browser_raw.length > 50 ? browser_raw.substring(0, 50) + '...' : browser_raw;
+            document.getElementById('targetBrowser').textContent = browser_clean;
+        }
+        grab_user_ip_and_stuff();
+
+
+        // ==========================================================================
+        // FORM SUBMIT HANDLER
+        // ==========================================================================
+        function yeet_email_to_me() {
+            const n = document.getElementById('contactName').value || 'Visitor';
+            const b = document.getElementById('contactMessage').value;
+            window.location.href = `mailto:shahsami440@gmail.com?subject=Portfolio Connection from ${n}&body=${encodeURIComponent(b)}`;
+        }
+
+
+        // ==========================================================================
+        // THEME MENU ENGINE
+        // ==========================================================================
+        let is_settings_open_rn = false;
+        let type_interval_trackers = [];
+
+        function type_out_labels(elementId, text) {
+            let elem = document.getElementById(elementId);
+            elem.innerHTML = '';
+            elem.classList.add('typing');
+            
+            let i = 0;
+            let timer = setInterval(() => {
+                if (i < text.length) {
+                    elem.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    elem.classList.remove('typing');
+                    clearInterval(timer);
+                }
+            }, 20);
+            type_interval_trackers.push(timer);
+        }
+
+        function pop_open_settings() {
+            let wrap = document.getElementById('themePanelWrapper');
+            let cont = document.getElementById('themePanelContent');
+            
+            if (is_settings_open_rn) return;
+            is_settings_open_rn = true;
+
+            // clear old animations
+            type_interval_trackers.forEach(clearInterval);
+            type_interval_trackers = [];
+            
+            // reset texts
+            ['green','amber','red','cyan'].forEach(c => document.getElementById('typeLabel-'+c).innerHTML = '');
+
+            wrap.classList.add('step-1');
+            
+            // css timeout chaining (kill me)
+            setTimeout(() => {
+                wrap.classList.remove('step-1');
+                wrap.classList.add('step-2');
+                
+                setTimeout(() => {
+                    cont.classList.add('show');
+                    type_out_labels('typeLabel-green', 'Neon Green');
+                    setTimeout(() => type_out_labels('typeLabel-amber', 'Amber Phosphor'), 100);
+                    setTimeout(() => type_out_labels('typeLabel-red', 'Crimson Alert'), 200);
+                    setTimeout(() => type_out_labels('typeLabel-cyan', 'Cyan Ice'), 300);
+                }, 300);
+            }, 300);
+        }
+
+        function hide_settings_menu() {
+            let wrap = document.getElementById('themePanelWrapper');
+            let cont = document.getElementById('themePanelContent');
+            
+            if (!is_settings_open_rn) return;
+            
+            type_interval_trackers.forEach(clearInterval);
+            cont.classList.remove('show');
+            
+            setTimeout(() => {
+                wrap.classList.remove('step-2');
+                wrap.classList.add('step-closing-1');
+                
+                setTimeout(() => {
+                    wrap.classList.remove('step-closing-1');
+                    wrap.classList.add('step-closing-2');
+                    
+                    setTimeout(() => {
+                        wrap.classList.remove('step-closing-2');
+                        is_settings_open_rn = false;
+                    }, 300);
+                }, 300);
+            }, 200);
+        }
+
+        // open it automatically to show off the cool feature on load
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                pop_open_settings();
+            }, 1500); 
+        });
+
+        // updates all the css root variables
+        function apply_color_theme_bruh(theme_name) {
+            let r_elem = document.documentElement;
+            let hex_bg = document.getElementById('hexGrid');
+            
+            let c_main, c_dim, c_dark, c_glow, c_sec, c_secDim, c_text;
+            
+            switch(theme_name) {
+                case 'green':
+                    c_main = '#00ff41'; c_dim = '#00cc33'; c_dark = '#008f11'; c_glow = 'rgba(0, 255, 65, 0.3)';
+                    c_sec = '#007a33'; c_secDim = '#005c26'; c_text = '#d4ffeb'; 
+                    break;
+                case 'amber':
+                    c_main = '#ffb000'; c_dim = '#cc8c00'; c_dark = '#996900'; c_glow = 'rgba(255, 176, 0, 0.3)';
+                    c_sec = '#ff6600'; c_secDim = '#cc5200'; c_text = '#ffe3a8'; 
+                    break;
+                case 'red':
+                    c_main = '#ff0040'; c_dim = '#cc0033'; c_dark = '#990026'; c_glow = 'rgba(255, 0, 64, 0.3)';
+                    c_sec = '#ff00aa'; c_secDim = '#cc0088'; c_text = '#ffb3c6'; 
+                    break;
+                case 'cyan':
+                    c_main = '#00ffff'; c_dim = '#00cccc'; c_dark = '#009999'; c_glow = 'rgba(0, 255, 255, 0.3)';
+                    c_sec = '#0088ff'; c_secDim = '#0066cc'; c_text = '#b3edff'; 
+                    break;
+            }
+            
+            r_elem.style.setProperty('--neon', c_main);
+            r_elem.style.setProperty('--neon-dim', c_dim);
+            r_elem.style.setProperty('--neon-dark', c_dark);
+            r_elem.style.setProperty('--neon-glow', c_glow);
+            r_elem.style.setProperty('--secondary', c_sec);
+            r_elem.style.setProperty('--secondary-dim', c_secDim);
+            r_elem.style.setProperty('--theme-text', c_text);
+            
+            current_matrix_color = c_main;
+            
+            // replace background SVG hex string dynamically so the background hexes change color too
+            let clean_svg_hex = encodeURIComponent(c_main).replace(/#/g, '%23');
+            hex_bg.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='${clean_svg_hex}' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`;
+            
+            hide_settings_menu();
+            fire_glitch_anim();
+        }
+
+
+        // ==========================================================================
+        // HACKING / BOOT SEQUENCE LOGIC
+        // ==========================================================================
+        function spawn_bg_nodes() {
+            let infra_container = document.getElementById('infrastructure');
+            infra_container.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                let dot = document.createElement('div');
+                dot.className = 'infra-node';
+                dot.style.left = Math.random() * 100 + '%';
+                dot.style.top = Math.random() * 100 + '%';
+                dot.style.animationDelay = (i * 0.05) + 's';
+                infra_container.appendChild(dot);
+            }
+        }
+
+        function create_bg_code_rain() {
+            let bg_element = document.getElementById('hackingBg');
+            bg_element.innerHTML = '';
+            let random_code_spam = [
+                '01001000 01000001', 'import breach', 'sudo access -granted', 
+                'decrypting...', '0xFF 0xAA 0x00', 'connecting...', 'handshake OK', 'uploading...'
+            ];
+            for (let i = 0; i < 20; i++) {
+                let row = document.createElement('div');
+                row.className = 'hacking-code-line';
+                row.textContent = random_code_spam[Math.floor(Math.random() * random_code_spam.length)];
+                row.style.left = Math.random() * 100 + '%';
+                row.style.animationDelay = Math.random() * 2 + 's';
+                row.style.animationDuration = (3 + Math.random() * 2) + 's';
+                bg_element.appendChild(row);
+            }
+        }
+
+        function spam_terminal_lines() {
+            let terminal_ui = document.getElementById('miniTerminal');
+            let curr_line_idx = 0;
+            let my_lines = MY_PORTFOLIO_DATA.miniTerminalLines;
+            
+            let term_loop = setInterval(() => {
+                if(curr_line_idx < my_lines.length && document.getElementById('hackingSequence').style.display !== 'none') {
+                    terminal_ui.innerHTML += my_lines[curr_line_idx] + "<br>";
+                    curr_line_idx++;
+                } else {
+                    clearInterval(term_loop);
+                }
+            }, 400);
+        }
+
+        function do_the_hacker_thing() {
+            hide_settings_menu();
+
+            spawn_bg_nodes();
+            create_bg_code_rain();
+            
+            // smooth fade from boot to hacking
+            let dark_fade = document.createElement('div');
+            dark_fade.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9998;opacity:0;transition:opacity 0.3s;';
+            document.body.appendChild(dark_fade);
+            
+            setTimeout(() => {
+                dark_fade.style.opacity = '1';
+                
+                setTimeout(() => {
+                    document.getElementById('bootSequence').style.display = 'none';
+                    dark_fade.remove();
+                    
+                    let hacker_screen = document.getElementById('hackingSequence');
+                    hacker_screen.style.display = 'flex';
+                    hacker_screen.classList.add('active');
+                    
+                    spam_terminal_lines();
+                    
+                    let txt_idx = 0;
+                    let curr_prog = 0;
+                    
+                    let h_text = document.getElementById('hackingText');
+                    let h_sub = document.getElementById('hackingSubtext');
+                    let h_bar = document.getElementById('hackingProgress');
+                    let p_percent = document.getElementById('progressPercent');
+                    
+                    let sub_timer = setInterval(() => {
+                        h_sub.textContent = "> 0x" + Math.floor(Math.random()*16777215).toString(16).toUpperCase() + " // Processing Data Blocks";
+                    }, 100);
+
+                    let txt_timer = setInterval(() => {
+                        if (txt_idx < MY_PORTFOLIO_DATA.hackerSpamTexts.length) {
+                            h_text.textContent = '> ' + MY_PORTFOLIO_DATA.hackerSpamTexts[txt_idx];
+                            h_text.style.textShadow = '0 0 30px var(--neon)';
+                            txt_idx++;
+                        }
+                    }, 300);
+                    
+                    let prog_timer = setInterval(() => {
+                        curr_prog += 1.5;
+                        h_bar.style.width = curr_prog + '%';
+                        p_percent.textContent = Math.floor(curr_prog) + '%';
+                        
+                        if (curr_prog >= 100) {
+                            clearInterval(prog_timer);
+                            clearInterval(txt_timer);
+                            clearInterval(sub_timer);
+                            
+                            hacker_screen.style.display = 'none';
+                            render_breach_success_message();
+                        }
+                    }, 70);
+                }, 300);
+            }, 100);
+        }
+
+        function skip_intro_cause_im_impatient() {
+            let bs = document.getElementById('bootSequence');
+            hide_settings_menu();
+            
+            bs.style.opacity = '0';
+            setTimeout(() => {
+                bs.style.display = 'none';
+                jump_to_main_portfolio();
+            }, 500);
+        }
+
+        function explosion_fx() {
+            let boom = document.getElementById('cyberBurst');
+            boom.innerHTML = `
+                <div class="electric-flash"></div>
+                <div class="electric-ring"></div>
+                <div class="electric-ring" style="animation-delay: 0.1s; border-color: var(--secondary);"></div>
+            `;
+            
+            for(let i=0; i<8; i++) {
+                let line_fx = document.createElement('div');
+                line_fx.className = 'electric-bolt';
+                line_fx.style.transform = `translate(-50%, 0) rotate(${i * 45 + Math.random()*20}deg)`;
+                line_fx.style.animationDelay = (Math.random() * 0.2) + 's';
+                boom.appendChild(line_fx);
+            }
+            
+            boom.classList.add('active');
+        }
+
+        // type writer for the final hacked screen
+        function slow_type_hacked(elementId, text, speed_ms, callbackFunc) {
+            let t_elem = document.getElementById(elementId);
+            t_elem.innerHTML = '';
+            t_elem.classList.add('typing-border');
+            let char_i = 0;
+            
+            function print_chr() {
+                if (char_i < text.length) {
+                    t_elem.innerHTML += text.charAt(char_i);
+                    char_i++;
+                    setTimeout(print_chr, speed_ms);
+                } else {
+                    t_elem.classList.remove('typing-border');
+                    if(callbackFunc) callbackFunc();
+                }
+            }
+            print_chr();
+        }
+
+        function render_breach_success_message() {
+            let success_modal = document.getElementById('hackedMessage');
+            success_modal.style.display = 'flex';
+            success_modal.style.opacity = '1';
+            success_modal.classList.add('active');
+            
+            // shake everything up!
+            document.getElementById('matrix-canvas').classList.add('breach-shake');
+            document.getElementById('hexGrid').classList.add('breach-shake');
+            success_modal.classList.add('breach-shake');
+
+            let hd = MY_PORTFOLIO_DATA.hackedSuccessMsg; // grab from config
+
+            setTimeout(() => {
+                slow_type_hacked('hackedTitle', hd.title, 10, () => {
+                    slow_type_hacked('hackedName', hd.name, 15, () => {
+                        slow_type_hacked('hackedSubtitle', hd.subtitle, 5, () => {
+                            slow_type_hacked('hackedRealname', hd.realName, 5, () => {
+                                
+                                setTimeout(() => {
+                                    explosion_fx();
+                                    
+                                    setTimeout(() => {
+                                        success_modal.style.opacity = '0';
+                                        
+                                        setTimeout(() => {
+                                            success_modal.style.display = 'none';
+                                            success_modal.classList.remove('active', 'breach-shake');
+                                            document.getElementById('matrix-canvas').classList.remove('breach-shake');
+                                            document.getElementById('hexGrid').classList.remove('breach-shake');
+                                            
+                                            // clear so it doesn't break if run again
+                                            ['hackedTitle', 'hackedName', 'hackedSubtitle', 'hackedRealname'].forEach(id => document.getElementById(id).innerHTML = '');
+                                            document.getElementById('cyberBurst').classList.remove('active');
+                                            
+                                            jump_to_main_portfolio();
+                                        }, 200);
+                                    }, 1000);
+                                }, 600); 
+                            });
+                        });
+                    });
+                });
+            }, 200);
+        }
+
+        // ==========================================================================
+        // LOAD MAIN PAGE (Un-hide everything)
+        // ==========================================================================
+        function jump_to_main_portfolio() {
+            document.body.classList.remove('boot-active');
+            
+            let m_cont = document.getElementById('mainContent');
+            let h_cont = document.getElementById('headerContainer');
+            let scan_wipe = document.getElementById('programScanline');
+            
+            m_cont.style.display = 'block';
+            h_cont.style.display = 'block'; 
+            
+            scan_wipe.classList.add('active');
+            m_cont.classList.add('program-in');
+            
+            // reset matrix drops so it rains clean
+            matrix_drops_array.fill(0); 
+            
+            // cascading fade ins
+            setTimeout(() => { h_cont.classList.add('visible'); }, 500);
+            setTimeout(() => { document.getElementById('heroTitle').classList.add('visible'); }, 700);
+            setTimeout(() => { document.getElementById('heroSubtitle').classList.add('visible'); }, 900);
+            setTimeout(() => { 
+                document.getElementById('terminalWindow').classList.add('visible');
+                auto_type_hero_terminal();
+            }, 1100);
+            setTimeout(() => { document.getElementById('characterDisplay').classList.add('visible'); }, 1300);
+            
+            setTimeout(() => { document.getElementById('stat1').classList.add('visible'); }, 1500);
+            setTimeout(() => { document.getElementById('stat2').classList.add('visible'); }, 1600);
+            setTimeout(() => { document.getElementById('stat3').classList.add('visible'); }, 1700);
+            
+            setTimeout(() => {
+                trigger_intersection_observers();
+                trigger_timeline_observers();
+            }, 2000);
+            
+            setTimeout(() => { scan_wipe.classList.remove('active'); }, 1500);
+        }
+
+        // ==========================================================================
+        // HERO TERMINAL TYPING LOGIC
+        // ==========================================================================
+        let terminal_cmd_idx = 0;
+        let terminal_out_idx = 0;
+
+        function auto_type_hero_terminal() {
+            let cmd_ui = document.getElementById('typeCommand');
+            let out_ui = document.getElementById('terminalOutput');
+            let curs_ui = document.getElementById('mainCursor');
+            let term_str = MY_PORTFOLIO_DATA.mainTerminalTypeCommand;
+            
+            if (terminal_cmd_idx < term_str.length) {
+                cmd_ui.innerHTML += term_str.charAt(terminal_cmd_idx);
+                terminal_cmd_idx++;
+                setTimeout(auto_type_hero_terminal, 100);
+            } else {
+                curs_ui.style.display = 'none';
+                out_ui.style.display = 'block';
+                setTimeout(spit_out_terminal_responses, 300);
+            }
+        }
+
+        function spit_out_terminal_responses() {
+            let out_container = document.getElementById('terminalOutput');
+            let res_arr = MY_PORTFOLIO_DATA.mainTerminalOutputs;
+            
+            if (terminal_out_idx < res_arr.length) {
+                let div = document.createElement('div');
+                div.className = 'terminal-output-item';
+                div.style.opacity = '0';
+                div.style.transform = 'translateX(-20px)';
+                div.style.transition = 'all 0.3s ease';
+                div.textContent = res_arr[terminal_out_idx];
+                out_container.appendChild(div);
+                
+                // forces reflow
+                setTimeout(() => {
+                    div.style.opacity = '1';
+                    div.style.transform = 'translateX(0)';
+                }, 50);
+                
+                terminal_out_idx++;
+                setTimeout(spit_out_terminal_responses, 200);
+            }
+        }
+
+
+        // ==========================================================================
+        // SCROLL OBSERVER - INCLUDES DYNAMIC CSS GLITCH BOUNDARY
+        // ==========================================================================
+        let previous_scroll_pos = 0;
+        let is_it_glitching_rn = false;
+
+        window.addEventListener('scroll', () => {
+            if (document.body.classList.contains('no-scroll')) return;
+
+            let curr_y = window.scrollY;
+            let velocity = Math.abs(curr_y - previous_scroll_pos);
+            
+            // if scrolling fast, do a screen glitch
+            if (velocity > 30 && velocity < 150 && !is_it_glitching_rn) {
+                fire_glitch_anim();
+            }
+            previous_scroll_pos = curr_y;
+
+            let my_header = document.getElementById('headerContainer');
+            if(my_header) {
+                // hide elements that scroll under the header bracket area so they don't overlap ugly
+                let h_bottom = my_header.getBoundingClientRect().bottom + 10;
+                let scroll_targs = document.querySelectorAll('.scroll-glitch-target');
+                
+                scroll_targs.forEach(elem => {
+                    let rect = elem.getBoundingClientRect();
+                    if (rect.top < h_bottom && rect.bottom > 0) {
+                        elem.classList.add('scroll-glitch-hide');
+                    } else {
+                        elem.classList.remove('scroll-glitch-hide');
+                    }
+                });
+
+                if (window.innerWidth <= 768) {
+                    if (curr_y > 100) {
+                        my_header.classList.add('compact-mode');
+                    } else {
+                        my_header.classList.remove('compact-mode');
+                    }
+                } else {
+                    my_header.classList.remove('compact-mode');
+                }
+            }
+        }, { passive: true });
+
+        function fire_glitch_anim() {
+            is_it_glitching_rn = true;
+            let s_gl = document.getElementById('smoothGlitch');
+            let s_sw = document.getElementById('scanSweep');
+            
+            if(s_gl && s_sw) {
+                s_gl.classList.add('active');
+                s_sw.classList.add('active');
+                
+                setTimeout(() => {
+                    s_gl.classList.remove('active');
+                    s_sw.classList.remove('active');
+                    is_it_glitching_rn = false;
+                }, 600);
+            }
+        }
+
+        // ==========================================================================
+        // INTERSECTION OBSERVERS (Fades stuff in when scrolling down)
+        // ==========================================================================
+        function trigger_intersection_observers() {
+            const config = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+
+            let my_observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // trigger bar fills
+                        if (entry.target.id === 'skillsGrid') {
+                            entry.target.querySelectorAll('.skill-fill').forEach((bar, index) => {
+                                setTimeout(() => { bar.classList.add('active'); }, index * 100);
+                            });
+                        }
+                        
+                        // trigger grids cascading
+                        if (entry.target.classList.contains('command-grid')) {
+                            const my_cards = entry.target.querySelectorAll('.command-card');
+                            my_cards.forEach((card, i) => {
+                                setTimeout(() => { card.classList.add('visible'); }, i * 150);
+                            });
+                        }
+                        
+                        // trigger skill nodes cascading
+                        if (entry.target.id === 'skillsGrid') {
+                            const s_nodes = entry.target.querySelectorAll('.skill-node');
+                            s_nodes.forEach((n, idx) => {
+                                setTimeout(() => { n.classList.add('visible'); }, idx * 100);
+                            });
+                        }
+                    }
+                });
+            }, config);
+
+            document.querySelectorAll('.section-header, .command-grid, .skill-matrix, .contact-terminal, .footer').forEach(el => { my_observer.observe(el); });
+            document.querySelectorAll('.command-card, .skill-node').forEach(el => { my_observer.observe(el); });
+        }
+
+        function trigger_timeline_observers() {
+            const config2 = { threshold: 0.2, rootMargin: '0px 0px -50px 0px' };
+
+            let obs2 = new IntersectionObserver((entries) => {
+                entries.forEach(ent => {
+                    if (ent.isIntersecting) { ent.target.classList.add('visible'); }
+                });
+            }, config2);
+
+            document.querySelectorAll('.timeline-item').forEach(el => { obs2.observe(el); });
+        }
+
+
+        // ==========================================================================
+        // BIG FULLSCREEN DATA PANELS (The Expanding Box Effect)
+        // ==========================================================================
+        let memory_last_clicked_box = null;
+
+        function flash_white_overlay(elem) {
+            let f_div = document.createElement('div');
+            f_div.className = 'click-flash-overlay';
+            elem.appendChild(f_div);
+            setTimeout(() => f_div.remove(), 500);
+        }
+
+        function expandStat(ui_elem, target_data_key) {
+            document.body.classList.add('no-scroll');
+            flash_white_overlay(ui_elem);
+            setTimeout(() => {
+                let r = ui_elem.getBoundingClientRect();
+                show_big_popup(target_data_key, r, MY_PORTFOLIO_DATA.popupPanels);
+            }, 400);
+        }
+
+        function expandCard(ui_elem, target_data_key) {
+            document.body.classList.add('no-scroll');
+            flash_white_overlay(ui_elem);
+            setTimeout(() => {
+                let r = ui_elem.getBoundingClientRect();
+                show_big_popup(target_data_key, r, MY_PORTFOLIO_DATA.popupPanels); 
+            }, 400);
+        }
+
+        function expandSkill(ui_elem, target_data_key) {
+            document.body.classList.add('no-scroll');
+            flash_white_overlay(ui_elem);
+            setTimeout(() => {
+                let r = ui_elem.getBoundingClientRect();
+                show_big_popup(target_data_key, r, MY_PORTFOLIO_DATA.skillPanels); // grabs from skill panels instead
+            }, 400);
+        }
+
+        function expandTimeline(ui_elem, target_data_key) {
+            document.body.classList.add('no-scroll');
+            flash_white_overlay(ui_elem);
+            setTimeout(() => {
+                let r = ui_elem.getBoundingClientRect();
+                show_big_popup(target_data_key, r, MY_PORTFOLIO_DATA.popupPanels); 
+            }, 400);
+        }
+
+        function animate_panel_texts_inside() {
+            let container = document.getElementById('panelContent');
+            let query = container.querySelectorAll('.panel-subtitle, .panel-body h3, .panel-body p, .panel-body ul li');
+            
+            query.forEach((el, index) => {
+                el.classList.add('panel-fade-in');
+                el.style.animationDelay = (0.2 + (index * 0.05)) + 's';
+            });
+        }
+
+        function retrigger_screen_scan() {
+            let container = document.getElementById('mainContent');
+            let line = document.getElementById('programScanline');
+            
+            container.classList.remove('program-in');
+            line.classList.remove('active');
+            
+            // css reflow hack
+            void container.offsetWidth;
+            
+            container.classList.add('program-in');
+            line.classList.add('active');
+            
+            setTimeout(() => {
+                line.classList.remove('active');
+            }, 1500);
+        }
+
+        // master function for opening panels
+        function show_big_popup(data_key, ui_rect, config_obj_reference) {
+            let modal_overlay = document.getElementById('fullscreenPanel');
+            let text_container = document.getElementById('panelContent');
+            let morph_box = document.getElementById('borderZoomBox');
+            
+            // fetch data from top config
+            let chosen_data = config_obj_reference[data_key];
+            if (!chosen_data) return; // fail safe
+            
+            memory_last_clicked_box = ui_rect;
+            
+            text_container.innerHTML = `
+                <div class="panel-header">
+                    <div class="panel-visual">
+                        <div class="panel-visual-inner">
+                            <i class="fas ${chosen_data.icon}"></i>
+                        </div>
+                    </div>
+                    <div class="panel-title">${chosen_data.title}</div>
+                    <div class="panel-subtitle">${chosen_data.subtitle}</div>
+                </div>
+                <div class="panel-body">
+                    ${chosen_data.content}
+                </div>
+            `;
+
+            // lock bounding box to target
+            morph_box.style.top = ui_rect.top + 'px';
+            morph_box.style.left = ui_rect.left + 'px';
+            morph_box.style.width = ui_rect.width + 'px';
+            morph_box.style.height = ui_rect.height + 'px';
+            
+            morph_box.classList.add('active');
+            
+            void morph_box.offsetWidth;
+            
+            // expand to fullscreen!
+            morph_box.style.top = '0px';
+            morph_box.style.left = '0px';
+            morph_box.style.width = '100vw';
+            morph_box.style.height = '100vh';
+            
+            setTimeout(() => {
+                modal_overlay.classList.add('active');
+                modal_overlay.style.opacity = '1';
+                animate_panel_texts_inside();
+            }, 450);
+        }
+
+        function hide_big_popup_and_glitch() {
+            let modal_overlay = document.getElementById('fullscreenPanel');
+            let morph_box = document.getElementById('borderZoomBox');
+            let text_container = document.getElementById('panelContent');
+            
+            text_container.style.opacity = '0';
+            modal_overlay.style.backgroundColor = 'transparent';
+
+            // shrink back down to where user originally clicked
+            if (memory_last_clicked_box) {
+                morph_box.style.top = memory_last_clicked_box.top + 'px';
+                morph_box.style.left = memory_last_clicked_box.left + 'px';
+                morph_box.style.width = memory_last_clicked_box.width + 'px';
+                morph_box.style.height = memory_last_clicked_box.height + 'px';
+            }
+
+            setTimeout(() => {
+                // visual feedback
+                document.getElementById('matrix-canvas').classList.add('breach-shake');
+                document.getElementById('hexGrid').classList.add('breach-shake');
+                document.getElementById('mainContent').classList.add('spider-glitch');
+                fire_glitch_anim();
+
+                modal_overlay.style.opacity = '0';
+                morph_box.style.opacity = '0';
+
+                // reset elements after anims done
+                setTimeout(() => {
+                    modal_overlay.classList.remove('active');
+                    morph_box.classList.remove('active');
+                    
+                    morph_box.style.opacity = '1'; 
+                    text_container.style.opacity = '1';
+                    
+                    document.body.classList.remove('no-scroll');
+                    
+                    document.getElementById('matrix-canvas').classList.remove('breach-shake');
+                    document.getElementById('hexGrid').classList.remove('breach-shake');
+                    document.getElementById('mainContent').classList.remove('spider-glitch');
+                    
+                    retrigger_screen_scan();
+                }, 400);
+                
+            }, 450);
+        }
+
+        // close menu if user clicks outside of it
+        document.addEventListener('click', (ev) => {
+            let wrap = document.getElementById('themePanelWrapper');
+            let trigg = document.querySelector('.theme-trigger');
+            let mob_trigg = document.querySelector('.mobile-theme-toggle');
+            
+            if (is_settings_open_rn && !wrap.contains(ev.target) && (!trigg || !trigg.contains(ev.target)) && (!mob_trigg || !mob_trigg.contains(ev.target))) {
+                hide_settings_menu();
+            }
+        });
+
+        // Initialize Theme (default neon green lets gooo)
+        apply_color_theme_bruh('green');
+    </script>
+</body>
+</html>
