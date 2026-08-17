@@ -1,0 +1,2 @@
+# Format: SubmissionID,CourseCode,SectionID,Type,Title,TotalMarks
+CSC103_BCS-1C_Assignment1,CSC103,BCS-1C,Assignment,Assignment1,15

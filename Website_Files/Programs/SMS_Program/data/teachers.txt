@@ -1,0 +1,15 @@
+# Format: Username,Name,Password,CourseCode1,CourseCode2...
+SamiaRiaz,Ms._Samia_Riaz,teacher123,CSC103
+AnumIlyas,Ms._Anum_Ilyas,teacher123,CSC101
+FatimaFarooq,Ms._Fatima_Farooq,teacher123,HUM104
+AsadZia,Mr._Asad_Zia,teacher123,HUM130
+Abdullah,Dr._Abdullah,teacher123,HUM112
+AatiqaHasrat,Ms._Aatiqa_Hasrat,teacher123,HUM208
+MuhammadBilal,Dr._Muhammad_Bilal,teacher123,CSC101
+MianMuhammadTalha,Mian_Muhammad_Talha,teacher123,CSC103
+MattiaArooj,Ms._Mattia_Arooj,teacher123,HUM208
+HassanAhmad,Mr._Hassan_Ahmad,teacher123,HUM130
+MehreenJavaid,Ms._Mehreen_Javaid,teacher123,HUM104
+AhtishamMasood,Dr._Ahtisham_Masood,teacher123,HUM112
+ShabiehFarwa,Dr._Shabieh_Farwa,teacher123,MTH091,MTH104
+TaimoorSajjad,Mr._Taimoor_Sajjad,teacher123,CSC103

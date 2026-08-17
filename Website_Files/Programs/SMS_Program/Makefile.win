@@ -1,0 +1,49 @@
+# Project: AcademicPortalProject
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = Sources/auth.o Sources/file_handler.o Sources/schedule.o Sources/student.o Sources/teacher.o Sources/admin.o Sources/utility.o main.o
+LINKOBJ  = Sources/auth.o Sources/file_handler.o Sources/schedule.o Sources/student.o Sources/teacher.o Sources/admin.o Sources/utility.o main.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32 -lws2_32 -std=c++11
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = AcademicPortalProject.exe
+CXXFLAGS = $(CXXINCS) -std=c++11
+CFLAGS   = $(INCS) -std=c++11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+Sources/auth.o: Sources/auth.cpp
+	$(CPP) -c Sources/auth.cpp -o Sources/auth.o $(CXXFLAGS)
+
+Sources/file_handler.o: Sources/file_handler.cpp
+	$(CPP) -c Sources/file_handler.cpp -o Sources/file_handler.o $(CXXFLAGS)
+
+Sources/schedule.o: Sources/schedule.cpp
+	$(CPP) -c Sources/schedule.cpp -o Sources/schedule.o $(CXXFLAGS)
+
+Sources/student.o: Sources/student.cpp
+	$(CPP) -c Sources/student.cpp -o Sources/student.o $(CXXFLAGS)
+
+Sources/teacher.o: Sources/teacher.cpp
+	$(CPP) -c Sources/teacher.cpp -o Sources/teacher.o $(CXXFLAGS)
+
+Sources/admin.o: Sources/admin.cpp
+	$(CPP) -c Sources/admin.cpp -o Sources/admin.o $(CXXFLAGS)
+
+Sources/utility.o: Sources/utility.cpp
+	$(CPP) -c Sources/utility.cpp -o Sources/utility.o $(CXXFLAGS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
